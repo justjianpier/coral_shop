@@ -1,14 +1,15 @@
 import { Star } from "lucide-react";
+import { Link } from "react-router";
 
 export function ProductItem({ product }) {
   const { image, title, price, rating } = product;
   return (
-    <div className="group rounded-2xl bg-gray-50 transition-transform duration-300 hover:-translate-y-2 shadow-md">
+    <Link to={`/product/${product.id}`} className="group rounded-2xl bg-gray-50 transition-transform duration-300 hover:-translate-y-2 shadow-md">
       <div className="h-80 flex items-center justify-center p-4">
         <img
           className="w-full h-full object-contain mx-auto transition-transform duration-300 group-hover:scale-105 cursor-pointer"
           src={image}
-          alt=""
+          alt={title}
         />
       </div>
       <div className="p-5">
@@ -30,6 +31,6 @@ export function ProductItem({ product }) {
           </button>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

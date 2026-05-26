@@ -12,7 +12,7 @@ export function ProductsPage() {
   return (
     <>
       <Header />
-      <section className="max-w-7xl w-[90%] mx-auto">
+      <section className="max-w-7xl w-[90%] mx-auto py-16">
         <div className="mb-10">
           <h2 className="text-2xl font-semibold md:text-3xl">
             Features Products
