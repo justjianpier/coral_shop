@@ -1,4 +1,6 @@
 export function Footer() {
+  const currentYear = new Date().getFullYear();
+
   const sectionLinks = [
     {
       id: 1,
@@ -16,9 +18,9 @@ export function Footer() {
       section: "About Us",
       links: [
         { id: "au1", name: "Our Story" },
-        { id: "au2", name: "Carrers" },
+        { id: "au2", name: "Careers" },
         { id: "au3", name: "Press" },
-        { id: "au4", name: "Sustainabilty" },
+        { id: "au4", name: "Sustainability" },
         { id: "au5", name: "Blog" },
       ],
     },
@@ -36,28 +38,52 @@ export function Footer() {
   ];
 
   return (
-    <footer className="bg-linear-to-b from-[#101727] to-[#000000]">
+    <footer className="bg-linear-to-b from-[#101727] to-[#000000] text-gray-400 pt-16 pb-8 border-t border-gray-800">
       <div className="max-w-7xl w-[90%] mx-auto">
-        <h3 className="text-white text-xl mb-5">About Coral</h3>
-        <p className="text-sm leading-relaxed mb-6 text-gray-400">
-          Your marketplace for unique, handcrafted items. Discover one-of-a-kind
-          pieces created by independent artisans from around the world.
-        </p>
-        {sectionLinks.map((section) => (
-          <ul className="space-y-3 text-sm" key={section.id}>
-            <h3 className="text-white text-xl mb-5">{section.section}</h3>
-            {section.links.map((link) => (
-              <li className="text-sm" key={link.id}>
-                <a
-                  className="text-gray-400 hover:text-coral-400 transition-colors hover:translate-x-1 inline-block"
-                  href="#"
-                >
-                  {link.name}
-                </a>
-              </li>
-            ))}
-          </ul>
-        ))}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 xl:gap-16 pb-12">
+          <div className="lg:col-span-2 flex flex-col gap-4">
+            <h2 className="text-white text-2xl font-bold tracking-wider">
+              CORAL
+            </h2>
+            <p className="text-sm leading-relaxed max-w-sm">
+              Your marketplace for unique, handcrafted items. Discover
+              one-of-a-kind pieces created by independent artisans from around
+              the world.
+            </p>
+          </div>
+
+          {sectionLinks.map((group) => (
+            <div key={group.id} className="flex flex-col gap-4">
+              <h3 className="text-white font-semibold uppercase tracking-wider text-sm">
+                {group.section}
+              </h3>
+              <ul className="space-y-3">
+                {group.links.map((link) => (
+                  <li key={link.id}>
+                    <a
+                      className="text-sm hover:text-coral-400 transition-all hover:translate-x-1 inline-block duration-200"
+                      href="#"
+                    >
+                      {link.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        <div className="border-t border-gray-800 pt-8 mt-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+          <p>&copy; {currentYear} Coral Store. All rights reserved.</p>
+          <div className="flex gap-6">
+            <a href="#" className="hover:text-white transition-colors">
+              Privacy Policy
+            </a>
+            <a href="#" className="hover:text-white transition-colors">
+              Terms of Service
+            </a>
+          </div>
+        </div>
       </div>
     </footer>
   );
