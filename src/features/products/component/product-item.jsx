@@ -1,10 +1,15 @@
 import { Star } from "lucide-react";
 import { Link } from "react-router";
+import { useCart } from "../../cart/hooks/use-cart";
 
 export function ProductItem({ product }) {
   const { image, title, price, rating } = product;
+  const { addToCart } = useCart();
   return (
-    <Link to={`/product/${product.id}`} className="group rounded-2xl bg-gray-50 transition-transform duration-300 hover:-translate-y-2 shadow-md">
+    <Link
+      to={`/product/${product.id}`}
+      className="group rounded-2xl bg-gray-50 transition-transform duration-300 hover:-translate-y-2 shadow-md"
+    >
       <div className="h-80 flex items-center justify-center p-4">
         <img
           className="w-full h-full object-contain mx-auto transition-transform duration-300 group-hover:scale-105 cursor-pointer"
@@ -26,7 +31,14 @@ export function ProductItem({ product }) {
         </div>
         <div className="flex items-center justify-between">
           <p className="text-xl text-[#ff5331]">${price}</p>
-          <button className="bg-[#ff5331] text-white text-lg px-4 py-2 rounded-md opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-400 cursor-pointer">
+          <button
+            type="button"
+            className="bg-[#ff5331] text-white text-lg px-4 py-2 rounded-md opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-400 cursor-pointer"
+            onClick={(e) => {
+              e.preventDefault();
+              addToCart(product);
+            }}
+          >
             Add to Cart
           </button>
         </div>
