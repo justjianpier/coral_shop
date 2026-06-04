@@ -1,21 +1,30 @@
 import { Link, useParams } from "react-router";
+
+import { ShoppingCart, Star } from "lucide-react";
+
 import { Footer } from "../../../common/components/footer";
 import { Header } from "../../../common/components/header";
+
 import { useGetProductsById } from "../hooks/use-get-products-by-id";
-import { ShoppingCart, Star } from "lucide-react";
+import { useCart } from "../../cart/hooks/use-cart";
 
 export function ProductDetail() {
   const { id } = useParams();
   const { product, loading, error } = useGetProductsById(id);
 
+  const { addToCart } = useCart();
+
   if (loading) return <p>Loading...</p>;
- if (error) {
+  if (error) {
     return (
       <>
         <Header />
         <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4">
           <p className="text-red-500 font-medium text-lg">Error: {error}</p>
-          <Link to="/" className="text-sm font-semibold underline text-gray-600 hover:text-black">
+          <Link
+            to="/"
+            className="text-sm font-semibold underline text-gray-600 hover:text-black"
+          >
             Volver a la tienda
           </Link>
         </div>
@@ -83,7 +92,14 @@ export function ProductDetail() {
                 </p>
               </div>
 
-              <button className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 bg-gray-900 hover:bg-black text-white px-8 py-4 rounded-xl font-semibold shadow-sm hover:shadow transition-all duration-200 active:scale-98">
+              <button
+                type="button"
+                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 bg-gray-900 hover:bg-black text-white px-8 py-4 rounded-xl font-semibold shadow-sm hover:shadow transition-all duration-200 active:scale-98 cursor-pointer"
+                onClick={(e) => {
+                  e.preventDefault();
+                  addToCart(product);
+                }}
+              >
                 <ShoppingCart className="w-5 h-5" />
                 Add to cart
               </button>
