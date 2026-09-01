@@ -39,15 +39,17 @@ export function Header() {
         <div className="max-w-7xl mx-auto w-[90%] py-4">
           <div className="grid items-center grid-cols-2 gap-4 md:grid-cols-[1fr_2.5fr_1fr]">
             <div className="flex items-center gap-4">
-              <Menu />
+              <button className="md:hidden">
+                <Menu />
+              </button>
               <Link to="/" className="text-[#ff5331] text-3xl font-semibold">
                 Coral
               </Link>
             </div>
             <div className="col-star-2 col-end-3 md:col-star-3 md:col-end-4 flex justify-end gap-4">
-              <button type="button" className="cursor-pointer">
+              <Link to={"/login"} className="cursor-pointer">
                 <User />
-              </button>
+              </Link>
               <button
                 type="button"
                 className="relative cursor-pointer"
