@@ -23,7 +23,7 @@ export function Header() {
   };
 
   return (
-    <header className="relative">
+    <header className="sticky top-0 z-50">
       <p className="bg-[#ff5331] py-4 text-center text-white">
         ✨ Free shipping on orders over $50 | Spring Sale: Up to 40% Off
       </p>
