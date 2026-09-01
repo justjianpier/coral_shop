@@ -18,6 +18,14 @@ export function Header() {
   const location = useLocation();
   const hideSearch = location.pathname === "/products";
 
+  const links = [
+    { id: 1, name: "All Products", url: "/products" },
+    { id: 2, name: "Men's Clothing", url: "men" },
+    { id: 3, name: "Women's Clothing", url: "women" },
+    { id: 4, name: "Jewelry", url: "jewelry" },
+    { id: 5, name: "Best Sellers", url: "best_sellers" },
+  ];
+
   const toggleCart = () => {
     setIsCartOpen((prev) => !prev);
   };
@@ -79,6 +87,13 @@ export function Header() {
                 />
               </div>
             )}
+            <ul className="hidden md:col-span-full md:flex md:justify-between md:gap-4 md:border-t md:border-gray-200 md:pt-4">
+              {links.map((link) => (
+                <li key={link.id}>
+                  <a href={link.url}>{link.name}</a>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>
