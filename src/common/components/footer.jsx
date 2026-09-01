@@ -1,3 +1,5 @@
+import { Link } from "react-router";
+
 export function Footer() {
   const currentYear = new Date().getFullYear();
 
@@ -17,11 +19,11 @@ export function Footer() {
       id: 2,
       section: "About Us",
       links: [
-        { id: "au1", name: "Our Story" },
-        { id: "au2", name: "Careers" },
-        { id: "au3", name: "Press" },
-        { id: "au4", name: "Sustainability" },
-        { id: "au5", name: "Blog" },
+        { id: "au1", name: "Our Story", url: "/our_story" },
+        { id: "au2", name: "Careers", url: "/careers" },
+        { id: "au3", name: "Press", url: "/press" },
+        { id: "au4", name: "Sustainability", url: "/sustainability" },
+        { id: "au5", name: "Blog", url: "/blog" },
       ],
     },
     {
@@ -60,12 +62,13 @@ export function Footer() {
               <ul className="space-y-3">
                 {group.links.map((link) => (
                   <li key={link.id}>
-                    <a
+                    <Link
+                      to={link.url}
                       className="text-sm hover:text-coral-400 transition-all hover:translate-x-1 inline-block duration-200"
                       href="#"
                     >
                       {link.name}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
