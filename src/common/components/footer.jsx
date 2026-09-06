@@ -79,12 +79,12 @@ export function Footer() {
         <div className="border-t border-gray-800 pt-8 mt-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
           <p>&copy; {currentYear} Coral Store. All rights reserved.</p>
           <div className="flex gap-6">
-            <a href="#" className="hover:text-white transition-colors">
+            <Link to="/privacy_policy" className="hover:text-white transition-colors">
               Privacy Policy
-            </a>
-            <a href="#" className="hover:text-white transition-colors">
+            </Link>
+            <Link to="/terms_of_service" className="hover:text-white transition-colors">
               Terms of Service
-            </a>
+            </Link>
           </div>
         </div>
       </div>

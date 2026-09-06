@@ -5,17 +5,19 @@ import { Login } from "../app/login/login";
 import { Products } from "../app/products/products";
 import { ProductDetail } from "../features/products/pages/product-detail";
 
-import { Blogs } from "../common/pages/blogs";
-import { Press } from "../common/pages/press";
-import { Careers } from "../common/pages/careers";
-import { OurStory } from "../common/pages/our-story";
-import { Sustainability } from "../common/pages/sustainability";
+import { Blogs } from "../pages/blogs";
+import { Press } from "../pages/press";
+import { Careers } from "../pages/careers";
+import { OurStory } from "../pages/our-story";
+import { Sustainability } from "../pages/sustainability";
 
-import { FAQ } from "../common/pages/faq";
-import { Returns } from "../common/pages/returns";
-import { SizeGuide } from "../common/pages/size-guide";
-import { ContactUs } from "../common/pages/contact-us";
-import { ShippingInfo } from "../common/pages/shipping-info";
+import { FAQ } from "../pages/faq";
+import { Returns } from "../pages/returns";
+import { SizeGuide } from "../pages/size-guide";
+import { ContactUs } from "../pages/contact-us";
+import { ShippingInfo } from "../pages/shipping-info";
+import { PrivacyPolicy } from "../pages/privacy-policy";
+import { TermsOfService } from "../pages/terms-of-service";
 
 export const router = createBrowserRouter([
   { path: "/", Component: Home },
@@ -24,17 +26,21 @@ export const router = createBrowserRouter([
   { path: "product/:id", Component: ProductDetail },
 
   // Páginas del footer
-  // (About us)
+  // About us
   { path: "blogs", Component: Blogs },
   { path: "/press", Component: Press },
   { path: "/careers", Component: Careers },
   { path: "/our_story", Component: OurStory },
   { path: "/sustainability", Component: Sustainability },
 
-  // (Customer Service)
+  // Customer Service
   { path: "/faq", Component: FAQ },
   { path: "/returns", Component: Returns },
   { path: "/size_guide", Component: SizeGuide },
   { path: "/contact_us", Component: ContactUs },
   { path: "/shipping_info", Component: ShippingInfo },
+
+  // Legal
+  { path: "/privacy_policy", Component: PrivacyPolicy },
+  { path: "/terms_of_service", Component: TermsOfService },
 ]);

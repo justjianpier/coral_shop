@@ -1,9 +1,9 @@
-import { Header } from "../components/header";
-import { Footer } from "../components/footer";
+import { Header } from "../common/components/header";
+import { Footer } from "../common/components/footer";
 
 export function SizeGuide() {
   return (
-    <div className="flex flex-col min-h-screen">
+    <>
       <Header />
       <main className="grow bg-linear-to-br from-rose-50 via-orange-50 to-rose-50 py-16">
         <div className="max-w-7xl w-[90%] mx-auto">
@@ -84,6 +84,6 @@ export function SizeGuide() {
         </div>
       </main>
       <Footer />
-    </div>
+    </>
   );
 }
