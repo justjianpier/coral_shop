@@ -6,7 +6,7 @@ export function ContactUs() {
     <>
       <div className="flex flex-col min-h-screen">
         <Header />
-        <main className="flex-grow bg-linear-to-br from-rose-50 via-orange-50 to-rose-50 py-16">
+        <main className="grow bg-linear-to-br from-rose-50 via-orange-50 to-rose-50 py-16">
           <div className="max-w-7xl w-[90%] mx-auto">
             <div className="text-center mb-12">
               <span className="inline-block bg-[#FFE8E3] px-4 py-2 rounded-full mb-6 font-medium text-[#FF623F]">
