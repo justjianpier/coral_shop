@@ -5,7 +5,7 @@ export function SizeGuide() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-grow bg-linear-to-br from-rose-50 via-orange-50 to-rose-50 py-16">
+      <main className="grow bg-linear-to-br from-rose-50 via-orange-50 to-rose-50 py-16">
         <div className="max-w-7xl w-[90%] mx-auto">
           <div className="text-center mb-12">
             <span className="inline-block bg-[#FFE8E3] px-4 py-2 rounded-full mb-6 font-medium text-[#FF623F]">
@@ -23,37 +23,55 @@ export function SizeGuide() {
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-gray-50 text-gray-700">
-                    <th className="py-4 px-6 font-semibold border-b border-gray-200">Size</th>
-                    <th className="py-4 px-6 font-semibold border-b border-gray-200">US</th>
-                    <th className="py-4 px-6 font-semibold border-b border-gray-200">Bust (in)</th>
-                    <th className="py-4 px-6 font-semibold border-b border-gray-200">Waist (in)</th>
-                    <th className="py-4 px-6 font-semibold border-b border-gray-200">Hips (in)</th>
+                    <th className="py-4 px-6 font-semibold border-b border-gray-200">
+                      Size
+                    </th>
+                    <th className="py-4 px-6 font-semibold border-b border-gray-200">
+                      US
+                    </th>
+                    <th className="py-4 px-6 font-semibold border-b border-gray-200">
+                      Bust (in)
+                    </th>
+                    <th className="py-4 px-6 font-semibold border-b border-gray-200">
+                      Waist (in)
+                    </th>
+                    <th className="py-4 px-6 font-semibold border-b border-gray-200">
+                      Hips (in)
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="text-gray-600">
                   <tr className="border-b border-gray-100">
-                    <td className="py-4 px-6 font-medium text-gray-900">Small (S)</td>
+                    <td className="py-4 px-6 font-medium text-gray-900">
+                      Small (S)
+                    </td>
                     <td className="py-4 px-6">4-6</td>
                     <td className="py-4 px-6">34-35</td>
                     <td className="py-4 px-6">26-27</td>
                     <td className="py-4 px-6">36-37</td>
                   </tr>
                   <tr className="border-b border-gray-100">
-                    <td className="py-4 px-6 font-medium text-gray-900">Medium (M)</td>
+                    <td className="py-4 px-6 font-medium text-gray-900">
+                      Medium (M)
+                    </td>
                     <td className="py-4 px-6">8-10</td>
                     <td className="py-4 px-6">36-37</td>
                     <td className="py-4 px-6">28-29</td>
                     <td className="py-4 px-6">38-39</td>
                   </tr>
                   <tr className="border-b border-gray-100">
-                    <td className="py-4 px-6 font-medium text-gray-900">Large (L)</td>
+                    <td className="py-4 px-6 font-medium text-gray-900">
+                      Large (L)
+                    </td>
                     <td className="py-4 px-6">12-14</td>
                     <td className="py-4 px-6">38.5-40</td>
                     <td className="py-4 px-6">30.5-32</td>
                     <td className="py-4 px-6">40.5-42</td>
                   </tr>
                   <tr>
-                    <td className="py-4 px-6 font-medium text-gray-900">X-Large (XL)</td>
+                    <td className="py-4 px-6 font-medium text-gray-900">
+                      X-Large (XL)
+                    </td>
                     <td className="py-4 px-6">16-18</td>
                     <td className="py-4 px-6">41.5-43</td>
                     <td className="py-4 px-6">33.5-35</td>
