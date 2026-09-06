@@ -2,11 +2,12 @@ import { Footer } from "../../../common/components/footer";
 import { Header } from "../../../common/components/header";
 import { ProductItem } from "../component/product-item";
 import { useGetProducts } from "../hooks/use-get-products";
+import { ProductsSkeleton } from "../skeletons/products-skeleton";
 
 export function ProductsPage() {
   const { products, loading, error } = useGetProducts();
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <ProductsSkeleton />;
   if (error) return <p>{error}</p>;
 
   return (

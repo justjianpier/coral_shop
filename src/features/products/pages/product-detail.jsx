@@ -7,6 +7,7 @@ import { Header } from "../../../common/components/header";
 
 import { useGetProductsById } from "../hooks/use-get-products-by-id";
 import { useCart } from "../../cart/hooks/use-cart";
+import { ProductDetailSkeleton } from "../skeletons/products-detail-skeleton";
 
 export function ProductDetail() {
   const { id } = useParams();
@@ -14,7 +15,7 @@ export function ProductDetail() {
 
   const { addToCart } = useCart();
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <ProductDetailSkeleton />;
   if (error) {
     return (
       <>
