@@ -1,5 +1,5 @@
-import { Link } from 'react-router';
-import { ArrowLeft, Mail, Lock } from 'lucide-react';
+import { Link } from "react-router";
+import { ArrowLeft, Mail, Lock } from "lucide-react";
 
 export function LoginPage() {
   return (
@@ -9,9 +9,7 @@ export function LoginPage() {
           <h1 className="font-semibold text-3xl tracking-tight mb-2">
             Welcome Back
           </h1>
-          <p className="text-gray-600">
-            Please enter your details to sign in
-          </p>
+          <p className="text-gray-600">Please enter your details to sign in</p>
         </div>
 
         <form className="space-y-6">
@@ -48,7 +46,10 @@ export function LoginPage() {
               />
             </div>
             <div className="flex justify-end mt-2">
-              <a href="#" className="text-sm font-medium text-[#FF623F] hover:underline">
+              <a
+                href="#"
+                className="text-sm font-medium text-[#FF623F] hover:underline"
+              >
                 Forgot password?
               </a>
             </div>
@@ -63,7 +64,7 @@ export function LoginPage() {
         </form>
 
         <p className="mt-8 text-center text-sm text-gray-600">
-          Don't have an account?{' '}
+          Don't have an account?{" "}
           <a href="#" className="font-medium text-[#FF623F] hover:underline">
             Sign up
           </a>
