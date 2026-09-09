@@ -71,6 +71,7 @@ export function Header() {
                   decreaseQuantity={decreaseQuantity}
                   cartTotal={cartTotal}
                   clearCart={clearCart}
+                  onClose={() => setIsCartOpen(false)}
                 />
               )}
             </div>
