@@ -1,4 +1,5 @@
-import { Mail, Lock } from 'lucide-react';
+import { Link } from 'react-router';
+import { ArrowLeft, Mail, Lock } from 'lucide-react';
 
 export function LoginPage() {
   return (
@@ -67,6 +68,16 @@ export function LoginPage() {
             Sign up
           </a>
         </p>
+
+        <div className="mt-6 pt-6 border-t border-gray-100">
+          <Link
+            to="/"
+            className="flex items-center justify-center gap-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to home
+          </Link>
+        </div>
       </div>
     </div>
   );
