@@ -1,4 +1,5 @@
 import { createBrowserRouter } from "react-router";
+import { Root } from "./root";
 
 import { Home } from "../app/home/home";
 import { Login } from "../app/login/login";
@@ -20,27 +21,32 @@ import { PrivacyPolicy } from "../pages/privacy-policy";
 import { TermsOfService } from "../pages/terms-of-service";
 
 export const router = createBrowserRouter([
-  { path: "/", Component: Home },
-  { path: "/login", Component: Login },
-  { path: "products", Component: Products },
-  { path: "product/:id", Component: ProductDetail },
+  {
+    path: "/",
+    element: <Root />,
+    children: [
+      { index: true, Component: Home },
+      { path: "login", Component: Login },
+      { path: "products", Component: Products },
+      { path: "product/:id", Component: ProductDetail },
 
-  // Páginas del footer
-  // About us
-  { path: "blogs", Component: Blogs },
-  { path: "/press", Component: Press },
-  { path: "/careers", Component: Careers },
-  { path: "/our_story", Component: OurStory },
-  { path: "/sustainability", Component: Sustainability },
+      // About us
+      { path: "blogs", Component: Blogs },
+      { path: "press", Component: Press },
+      { path: "careers", Component: Careers },
+      { path: "our_story", Component: OurStory },
+      { path: "sustainability", Component: Sustainability },
 
-  // Customer Service
-  { path: "/faq", Component: FAQ },
-  { path: "/returns", Component: Returns },
-  { path: "/size_guide", Component: SizeGuide },
-  { path: "/contact_us", Component: ContactUs },
-  { path: "/shipping_info", Component: ShippingInfo },
+      // Customer Service
+      { path: "faq", Component: FAQ },
+      { path: "returns", Component: Returns },
+      { path: "size_guide", Component: SizeGuide },
+      { path: "contact_us", Component: ContactUs },
+      { path: "shipping_info", Component: ShippingInfo },
 
-  // Legal
-  { path: "/privacy_policy", Component: PrivacyPolicy },
-  { path: "/terms_of_service", Component: TermsOfService },
+      // Legal
+      { path: "privacy_policy", Component: PrivacyPolicy },
+      { path: "terms_of_service", Component: TermsOfService },
+    ],
+  },
 ]);
