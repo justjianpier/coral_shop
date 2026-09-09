@@ -21,6 +21,14 @@ import { PrivacyPolicy } from "../pages/privacy-policy";
 import { TermsOfService } from "../pages/terms-of-service";
 import { Cart } from "../features/cart/pages/cart";
 
+import { AdminLayout } from "../features/admin/components/admin-layout";
+import { Overview } from "../features/admin/pages/overview";
+import { Users } from "../features/admin/pages/users";
+import { Products as AdminProducts } from "../features/admin/pages/products";
+import { ProductForm } from "../features/admin/pages/product-form";
+import { Orders } from "../features/admin/pages/orders";
+import { Categories } from "../features/admin/pages/categories";
+
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -49,6 +57,19 @@ export const router = createBrowserRouter([
       // Legal
       { path: "privacy_policy", Component: PrivacyPolicy },
       { path: "terms_of_service", Component: TermsOfService },
+    ],
+  },
+  {
+    path: "/admin",
+    element: <AdminLayout />,
+    children: [
+      { index: true, Component: Overview },
+      { path: "users", Component: Users },
+      { path: "products", Component: AdminProducts },
+      { path: "products/new", Component: ProductForm },
+      { path: "products/:id/edit", Component: ProductForm },
+      { path: "orders", Component: Orders },
+      { path: "categories", Component: Categories },
     ],
   },
 ]);
