@@ -1,9 +1,13 @@
+import { Link } from "react-router";
+import { Trash2 } from "lucide-react";
+
 export function CartDropDown({
   cart,
   removeFromCart,
   increaseQuantity,
   decreaseQuantity,
   cartTotal,
+  clearCart,
 }) {
   return (
     <div className="absolute top-full mt-2 w-96 rounded-lg border border-gray-400 bg-white shadow-xl z-10">
@@ -66,10 +70,27 @@ export function CartDropDown({
             </div>
           </div>
 
-          <div className="p-4">
-            <div className="flex items-center justify-between">
+          <div className="p-4 border-t border-gray-100">
+            <div className="flex items-center justify-between mb-4">
               <span className="font-semibold">Subtotal</span>
               <span className="font-bold">Total: ${cartTotal()}</span>
+            </div>
+
+            <div className="flex gap-2">
+              <Link
+                to="/cart"
+                className="flex-1 text-center py-2 px-4 bg-[#ff5331] text-white font-semibold rounded-lg hover:bg-[#e6472a] transition-colors"
+              >
+                View Cart
+              </Link>
+              <button
+                type="button"
+                onClick={clearCart}
+                className="py-2 px-4 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
+                title="Clear cart"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
             </div>
           </div>
         </>

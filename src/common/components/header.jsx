@@ -13,6 +13,7 @@ export function Header() {
     increaseQuantity,
     decreaseQuantity,
     cartTotal,
+    clearCart,
   } = useCart();
 
   const location = useLocation();
@@ -69,6 +70,7 @@ export function Header() {
                   increaseQuantity={increaseQuantity}
                   decreaseQuantity={decreaseQuantity}
                   cartTotal={cartTotal}
+                  clearCart={clearCart}
                 />
               )}
             </div>

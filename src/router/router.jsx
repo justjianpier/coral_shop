@@ -19,6 +19,7 @@ import { ContactUs } from "../pages/contact-us";
 import { ShippingInfo } from "../pages/shipping-info";
 import { PrivacyPolicy } from "../pages/privacy-policy";
 import { TermsOfService } from "../pages/terms-of-service";
+import { Cart } from "../features/cart/pages/cart";
 
 export const router = createBrowserRouter([
   {
@@ -29,6 +30,7 @@ export const router = createBrowserRouter([
       { path: "login", Component: Login },
       { path: "products", Component: Products },
       { path: "product/:id", Component: ProductDetail },
+      { path: "cart", Component: Cart },
 
       // About us
       { path: "blogs", Component: Blogs },
