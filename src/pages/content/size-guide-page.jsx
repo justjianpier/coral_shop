@@ -1,84 +1,62 @@
+import { Info, Ruler } from "lucide-react";
+import { ContentCard, ContentPage } from "./components/content-page";
+
+const SIZES = [
+  ["Small (S)", "4–6", "34–35", "26–27", "36–37"],
+  ["Medium (M)", "8–10", "36–37", "28–29", "38–39"],
+  ["Large (L)", "12–14", "38.5–40", "30.5–32", "40.5–42"],
+  ["X-Large (XL)", "16–18", "41.5–43", "33.5–35", "43.5–45"],
+];
+
 export function SizeGuidePage() {
   return (
-    <>
-      <main className="grow bg-linear-to-br from-rose-50 via-orange-50 to-rose-50 py-16">
-        <div className="max-w-7xl w-[90%] mx-auto">
-          <div className="text-center mb-12">
-            <span className="inline-block bg-[#FFE8E3] px-4 py-2 rounded-full mb-6 font-medium text-[#FF623F]">
-              Customer Service
-            </span>
-            <h1 className="font-semibold text-4xl lg:text-5xl tracking-tight mb-6">
-              Size Guide
-            </h1>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Find your perfect fit with our comprehensive sizing charts.
-            </p>
-          </div>
-          <div className="bg-white rounded-3xl p-8 shadow-xl border border-gray-100 max-w-4xl mx-auto">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="bg-gray-50 text-gray-700">
-                    <th className="py-4 px-6 font-semibold border-b border-gray-200">
-                      Size
-                    </th>
-                    <th className="py-4 px-6 font-semibold border-b border-gray-200">
-                      US
-                    </th>
-                    <th className="py-4 px-6 font-semibold border-b border-gray-200">
-                      Bust (in)
-                    </th>
-                    <th className="py-4 px-6 font-semibold border-b border-gray-200">
-                      Waist (in)
-                    </th>
-                    <th className="py-4 px-6 font-semibold border-b border-gray-200">
-                      Hips (in)
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="text-gray-600">
-                  <tr className="border-b border-gray-100">
-                    <td className="py-4 px-6 font-medium text-gray-900">
-                      Small (S)
+    <ContentPage
+      eyebrow="Fit & measurements"
+      title="Find the size that feels like you"
+      description="Use the measurements below as a general guide. Individual product notes may include more specific fit details."
+      icon={Ruler}
+    >
+      <ContentCard className="mx-auto max-w-5xl overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[42rem] text-left">
+            <caption className="sr-only">Coral clothing size measurements in inches</caption>
+            <thead className="bg-slate-950 text-white">
+              <tr>
+                {['Size', 'US', 'Bust (in)', 'Waist (in)', 'Hips (in)'].map((heading) => (
+                  <th key={heading} scope="col" className="px-5 py-4 text-xs font-black uppercase tracking-wider sm:px-6">
+                    {heading}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-stone-200">
+              {SIZES.map((size) => (
+                <tr key={size[0]} className="transition-colors hover:bg-[#fff8f4]">
+                  {size.map((value, index) => (
+                    <td
+                      key={value}
+                      className={`px-5 py-5 text-sm sm:px-6 ${index === 0 ? 'font-black text-slate-900' : 'font-medium text-slate-500'}`}
+                    >
+                      {value}
                     </td>
-                    <td className="py-4 px-6">4-6</td>
-                    <td className="py-4 px-6">34-35</td>
-                    <td className="py-4 px-6">26-27</td>
-                    <td className="py-4 px-6">36-37</td>
-                  </tr>
-                  <tr className="border-b border-gray-100">
-                    <td className="py-4 px-6 font-medium text-gray-900">
-                      Medium (M)
-                    </td>
-                    <td className="py-4 px-6">8-10</td>
-                    <td className="py-4 px-6">36-37</td>
-                    <td className="py-4 px-6">28-29</td>
-                    <td className="py-4 px-6">38-39</td>
-                  </tr>
-                  <tr className="border-b border-gray-100">
-                    <td className="py-4 px-6 font-medium text-gray-900">
-                      Large (L)
-                    </td>
-                    <td className="py-4 px-6">12-14</td>
-                    <td className="py-4 px-6">38.5-40</td>
-                    <td className="py-4 px-6">30.5-32</td>
-                    <td className="py-4 px-6">40.5-42</td>
-                  </tr>
-                  <tr>
-                    <td className="py-4 px-6 font-medium text-gray-900">
-                      X-Large (XL)
-                    </td>
-                    <td className="py-4 px-6">16-18</td>
-                    <td className="py-4 px-6">41.5-43</td>
-                    <td className="py-4 px-6">33.5-35</td>
-                    <td className="py-4 px-6">43.5-45</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-      </main>
-    </>
+      </ContentCard>
+
+      <div className="mx-auto mt-6 flex max-w-5xl items-start gap-4 rounded-2xl border border-[#ff5331]/15 bg-[#fff0eb] p-5">
+        <Info className="mt-0.5 h-5 w-5 shrink-0 text-[#ff5331]" aria-hidden="true" />
+        <div>
+          <h2 className="font-black text-slate-900">How to measure</h2>
+          <p className="mt-1 text-sm leading-6 text-slate-600">
+            Keep the measuring tape level and comfortably close to your body. If
+            you fall between sizes, choose the larger size for a more relaxed fit.
+          </p>
+        </div>
+      </div>
+    </ContentPage>
   );
 }

@@ -1,125 +1,62 @@
+import { FileCheck2 } from "lucide-react";
+import { ContentPage } from "./components/content-page";
+import { LegalDocument } from "./components/legal-document";
+
+const TERMS_SECTIONS = [
+  {
+    title: "Acceptance of Terms",
+    content:
+      "By accessing and using the Coral Shop website and services, you agree to these Terms of Service. If you do not agree, please do not use our services.",
+  },
+  {
+    title: "Account Registration",
+    content:
+      "Some features may require an account. You are responsible for keeping your credentials confidential and for activity that takes place through your account.",
+  },
+  {
+    title: "Products and Pricing",
+    content:
+      "We work to keep product descriptions, availability, and prices accurate. We reserve the right to correct errors and update information when necessary.",
+  },
+  {
+    title: "Orders and Payment",
+    content:
+      "By placing an order, you confirm that the supplied information is accurate. We may refuse or cancel orders due to availability, payment issues, or incorrect product information.",
+  },
+  {
+    title: "Shipping and Returns",
+    content:
+      "Delivery and return conditions are described on our Shipping Information and Returns pages. By completing a purchase, you agree to those conditions.",
+  },
+  {
+    title: "Intellectual Property",
+    content:
+      "Text, graphics, branding, and images on this website belong to Coral Shop or their respective owners and may not be reproduced without permission.",
+  },
+  {
+    title: "Limitation of Liability",
+    content:
+      "To the extent permitted by law, Coral Shop is not responsible for indirect, incidental, or consequential damages arising from use of our services or products.",
+  },
+  {
+    title: "Changes to These Terms",
+    content:
+      "We may update these terms when our services or legal obligations change. Continued use after an update indicates acceptance of the revised terms.",
+  },
+];
+
 export function TermsOfServicePage() {
   return (
-    <>
-      <main className="grow bg-linear-to-br from-rose-50 via-orange-50 to-rose-50 py-16">
-        <div className="max-w-7xl w-[90%] mx-auto">
-          <div className="text-center mb-12">
-            <span className="inline-block bg-[#FFE8E3] px-4 py-2 rounded-full mb-6 font-medium text-[#FF623F]">
-              Legal
-            </span>
-            <h1 className="font-semibold text-4xl lg:text-5xl tracking-tight mb-6">
-              Terms of Service
-            </h1>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Last updated: September 2026
-            </p>
-          </div>
-
-          <div className="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-gray-100 max-w-4xl mx-auto space-y-8">
-            <section>
-              <h2 className="text-xl font-semibold mb-3">
-                1. Acceptance of Terms
-              </h2>
-              <p className="text-gray-600 leading-relaxed">
-                By accessing and using the Coral Shop website and services, you
-                agree to be bound by these Terms of Service. If you do not agree
-                to these terms, please do not use our services.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-semibold mb-3">
-                2. Account Registration
-              </h2>
-              <p className="text-gray-600 leading-relaxed">
-                To access certain features, you may need to create an account.
-                You are responsible for maintaining the confidentiality of your
-                account credentials and for all activities that occur under your
-                account.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-semibold mb-3">
-                3. Products and Pricing
-              </h2>
-              <p className="text-gray-600 leading-relaxed">
-                We strive to provide accurate descriptions and pricing for all
-                products. However, we do not warrant that product descriptions
-                or pricing information is error-free. We reserve the right to
-                correct any errors and to change or update information at any
-                time without prior notice.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-semibold mb-3">
-                4. Orders and Payment
-              </h2>
-              <p className="text-gray-600 leading-relaxed">
-                By placing an order, you represent that all information provided
-                is accurate. We reserve the right to refuse or cancel any order
-                for any reason, including limitations on quantities available or
-                inaccuracies in product or pricing information.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-semibold mb-3">
-                5. Shipping and Returns
-              </h2>
-              <p className="text-gray-600 leading-relaxed">
-                Shipping and return policies are outlined in our Shipping Info
-                and Returns pages. By making a purchase, you agree to the terms
-                and conditions described therein.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-semibold mb-3">
-                6. Intellectual Property
-              </h2>
-              <p className="text-gray-600 leading-relaxed">
-                All content on this website, including text, graphics, logos,
-                and images, is the property of Coral Shop and is protected by
-                intellectual property laws. You may not reproduce, distribute,
-                or create derivative works without our express written
-                permission.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-semibold mb-3">
-                7. Limitation of Liability
-              </h2>
-              <p className="text-gray-600 leading-relaxed">
-                Coral Shop shall not be liable for any indirect, incidental,
-                special, or consequential damages resulting from the use or
-                inability to use our services or products.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-semibold mb-3">
-                8. Changes to Terms
-              </h2>
-              <p className="text-gray-600 leading-relaxed">
-                We reserve the right to update these terms at any time.
-                Continued use of our services after any changes constitutes
-                acceptance of the new terms.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-semibold mb-3">9. Contact Us</h2>
-              <p className="text-gray-600 leading-relaxed">
-                If you have any questions about these Terms of Service, please
-                contact us at terms@coralshop.com.
-              </p>
-            </section>
-          </div>
-        </div>
-      </main>
-    </>
+    <ContentPage
+      eyebrow="Legal"
+      title="Terms designed to be understood"
+      description="Last updated September 2026. These terms describe the agreement between you and Coral when using our store."
+      icon={FileCheck2}
+    >
+      <LegalDocument
+        sections={TERMS_SECTIONS}
+        contactEmail="terms@coralshop.com"
+      />
+    </ContentPage>
   );
 }
