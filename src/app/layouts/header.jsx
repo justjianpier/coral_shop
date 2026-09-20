@@ -1,5 +1,5 @@
 import { Menu, Search, ShoppingCart, User } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { Link, useLocation } from "react-router";
 import { CartDropDown } from "../../features/cart/components/cart-dropdown";
 import { useCart } from "../../features/cart/hooks/use-cart";
@@ -14,6 +14,7 @@ const HEADER_LINKS = [
 
 export function Header() {
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const cartButtonRef = useRef(null);
 
   const {
     cart,
@@ -27,9 +28,23 @@ export function Header() {
   const location = useLocation();
   const hideSearch = location.pathname === "/products";
 
+  const closeCart = useCallback(() => {
+    setIsCartOpen(false);
+    window.requestAnimationFrame(() => cartButtonRef.current?.focus());
+  }, []);
+
   const toggleCart = () => {
-    setIsCartOpen((prev) => !prev);
+    if (isCartOpen) {
+      closeCart();
+    } else {
+      setIsCartOpen(true);
+    }
   };
+
+  const cartItemCount = cart.reduce(
+    (total, item) => total + item.quantity,
+    0,
+  );
 
   return (
     <header className="sticky top-0 z-50">
@@ -40,26 +55,41 @@ export function Header() {
         <div className="max-w-7xl mx-auto w-[90%] py-4">
           <div className="grid items-center grid-cols-2 gap-4 md:grid-cols-[1fr_2.5fr_1fr]">
             <div className="flex items-center gap-4">
-              <button className="md:hidden">
-                <Menu />
+              <button className="md:hidden" aria-label="Open navigation menu">
+                <Menu aria-hidden="true" />
               </button>
               <Link to="/" className="text-[#ff5331] text-3xl font-semibold">
                 Coral
               </Link>
             </div>
-            <div className="col-star-2 col-end-3 md:col-star-3 md:col-end-4 flex justify-end gap-4">
-              <Link to="/login" className="cursor-pointer">
-                <User />
+            <div className="relative col-start-2 col-end-3 flex justify-end gap-3 md:col-start-3 md:col-end-4">
+              <Link
+                to="/login"
+                className="grid h-10 w-10 place-items-center rounded-full text-slate-700 transition-colors hover:bg-stone-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff5331]"
+                aria-label="Open account"
+              >
+                <User aria-hidden="true" />
               </Link>
               <button
+                ref={cartButtonRef}
                 type="button"
-                className="relative cursor-pointer"
+                className={`relative grid h-10 w-10 place-items-center rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff5331] ${
+                  isCartOpen
+                    ? "bg-[#fff0eb] text-[#ff5331]"
+                    : "text-slate-700 hover:bg-stone-100"
+                }`}
                 onClick={toggleCart}
+                aria-label={`Open shopping cart with ${cartItemCount} ${
+                  cartItemCount === 1 ? "item" : "items"
+                }`}
+                aria-expanded={isCartOpen}
+                aria-controls="shopping-cart-panel"
+                aria-haspopup="dialog"
               >
-                <ShoppingCart />
-                {cart.length > 0 && (
-                  <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-[#ff5331] text-xs text-white">
-                    {cart.length}
+                <ShoppingCart aria-hidden="true" />
+                {cartItemCount > 0 && (
+                  <span className="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#ff5331] px-1 text-xs text-white">
+                    {cartItemCount > 99 ? "99+" : cartItemCount}
                   </span>
                 )}
               </button>
@@ -71,7 +101,7 @@ export function Header() {
                   decreaseQuantity={decreaseQuantity}
                   cartTotal={cartTotal}
                   clearCart={clearCart}
-                  onClose={() => setIsCartOpen(false)}
+                  onClose={closeCart}
                 />
               )}
             </div>
