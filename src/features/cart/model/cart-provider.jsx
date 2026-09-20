@@ -1,17 +1,57 @@
-import { useCallback, useMemo, useReducer } from "react";
+import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import { CartContext } from "./cart-context";
-import { CART_ACTIONS, cartReducer } from "./cart-reducer";
+import { CART_ACTIONS, MAX_CART_ITEMS, cartReducer } from "./cart-reducer";
+
+const NOTIFICATION_DURATION = 3000;
 
 export function CartProvider({ children }) {
   const [cart, dispatch] = useReducer(cartReducer, []);
+  const [notification, setNotification] = useState(null);
+  const notificationIdRef = useRef(0);
+  const notificationTimerRef = useRef(null);
 
-  const addToCart = useCallback((item) => {
-    dispatch({ type: CART_ACTIONS.add, item });
+  const showNotification = useCallback((message, type) => {
+    window.clearTimeout(notificationTimerRef.current);
+    notificationIdRef.current += 1;
+
+    setNotification({
+      id: notificationIdRef.current,
+      message,
+      type,
+    });
+
+    notificationTimerRef.current = window.setTimeout(() => {
+      setNotification(null);
+      notificationTimerRef.current = null;
+    }, NOTIFICATION_DURATION);
   }, []);
 
-  const removeFromCart = useCallback((id) => {
-    dispatch({ type: CART_ACTIONS.remove, id });
-  }, []);
+  useEffect(
+    () => () => window.clearTimeout(notificationTimerRef.current),
+    [],
+  );
+
+  const addToCart = useCallback(
+    (item) => {
+      const existingItem = cart.find((cartItem) => cartItem.id === item.id);
+      if (existingItem?.quantity >= MAX_CART_ITEMS) return;
+
+      dispatch({ type: CART_ACTIONS.add, item });
+      showNotification("Producto agregado al carrito correctamente.", "success");
+    },
+    [cart, showNotification],
+  );
+
+  const removeFromCart = useCallback(
+    (id) => {
+      const itemExists = cart.some((item) => item.id === id);
+      if (!itemExists) return;
+
+      dispatch({ type: CART_ACTIONS.remove, id });
+      showNotification("Producto eliminado del carrito.", "error");
+    },
+    [cart, showNotification],
+  );
 
   const decreaseQuantity = useCallback((id) => {
     dispatch({ type: CART_ACTIONS.decrease, id });
@@ -22,8 +62,11 @@ export function CartProvider({ children }) {
   }, []);
 
   const clearCart = useCallback(() => {
+    if (cart.length === 0) return;
+
     dispatch({ type: CART_ACTIONS.clear });
-  }, []);
+    showNotification("Productos eliminados del carrito.", "error");
+  }, [cart.length, showNotification]);
 
   const cartTotal = useMemo(
     () =>
@@ -38,6 +81,7 @@ export function CartProvider({ children }) {
     () => ({
       cart,
       cartTotal,
+      notification,
       addToCart,
       removeFromCart,
       increaseQuantity,
@@ -47,6 +91,7 @@ export function CartProvider({ children }) {
     [
       cart,
       cartTotal,
+      notification,
       addToCart,
       removeFromCart,
       increaseQuantity,

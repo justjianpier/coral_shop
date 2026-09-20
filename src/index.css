@@ -1,1 +1,29 @@
 @import "tailwindcss";
+
+@keyframes cart-notification-in-out {
+  0% {
+    opacity: 0;
+    transform: translateY(-1rem);
+  }
+
+  10%,
+  85% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-1rem);
+  }
+}
+
+.cart-notification {
+  animation: cart-notification-in-out 3s ease-in-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cart-notification {
+    animation: none;
+  }
+}
