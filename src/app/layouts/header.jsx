@@ -1,20 +1,31 @@
-import { Menu, Search, ShoppingCart, User } from "lucide-react";
+import { Menu, Search, ShoppingCart, User, X } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 import { Link, useLocation } from "react-router";
 import { CartDropDown } from "../../features/cart/components/cart-dropdown";
 import { useCart } from "../../features/cart/hooks/use-cart";
+import { MobileMenu } from "./mobile-menu";
 
 const HEADER_LINKS = [
   { id: 1, name: "All Products", url: "/products" },
-  { id: 2, name: "Men's Clothing", url: "/men" },
-  { id: 3, name: "Women's Clothing", url: "/women" },
-  { id: 4, name: "Jewelry", url: "/jewelry" },
-  { id: 5, name: "Best Sellers", url: "/best-sellers" },
+  {
+    id: 2,
+    name: "Men's Clothing",
+    url: "/products?category=men%27s%20clothing",
+  },
+  {
+    id: 3,
+    name: "Women's Clothing",
+    url: "/products?category=women%27s%20clothing",
+  },
+  { id: 4, name: "Jewelry", url: "/products?category=jewelery" },
+  { id: 5, name: "Best Sellers", url: "/products?sort=best-sellers" },
 ];
 
 export function Header() {
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const cartButtonRef = useRef(null);
+  const menuButtonRef = useRef(null);
 
   const {
     cart,
@@ -33,10 +44,25 @@ export function Header() {
     window.requestAnimationFrame(() => cartButtonRef.current?.focus());
   }, []);
 
+  const closeMobileMenu = useCallback(() => {
+    setIsMobileMenuOpen(false);
+    window.requestAnimationFrame(() => menuButtonRef.current?.focus());
+  }, []);
+
+  const toggleMobileMenu = () => {
+    if (isMobileMenuOpen) {
+      closeMobileMenu();
+    } else {
+      setIsCartOpen(false);
+      setIsMobileMenuOpen(true);
+    }
+  };
+
   const toggleCart = () => {
     if (isCartOpen) {
       closeCart();
     } else {
+      setIsMobileMenuOpen(false);
       setIsCartOpen(true);
     }
   };
@@ -55,8 +81,29 @@ export function Header() {
         <div className="max-w-7xl mx-auto w-[90%] py-4">
           <div className="grid items-center grid-cols-2 gap-4 md:grid-cols-[1fr_2.5fr_1fr]">
             <div className="flex items-center gap-4">
-              <button className="md:hidden" aria-label="Open navigation menu">
-                <Menu aria-hidden="true" />
+              <button
+                ref={menuButtonRef}
+                type="button"
+                className={`grid h-10 w-10 place-items-center rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff5331] md:hidden ${
+                  isMobileMenuOpen
+                    ? "bg-[#fff0eb] text-[#ff5331]"
+                    : "text-slate-700 hover:bg-stone-100"
+                }`}
+                aria-label={
+                  isMobileMenuOpen
+                    ? "Close navigation menu"
+                    : "Open navigation menu"
+                }
+                aria-expanded={isMobileMenuOpen}
+                aria-controls="mobile-navigation"
+                aria-haspopup="dialog"
+                onClick={toggleMobileMenu}
+              >
+                {isMobileMenuOpen ? (
+                  <X aria-hidden="true" />
+                ) : (
+                  <Menu aria-hidden="true" />
+                )}
               </button>
               <Link to="/" className="text-[#ff5331] text-3xl font-semibold">
                 Coral
@@ -132,6 +179,12 @@ export function Header() {
           </div>
         </div>
       </div>
+      {isMobileMenuOpen && (
+        <MobileMenu
+          cartItemCount={cartItemCount}
+          onClose={closeMobileMenu}
+        />
+      )}
     </header>
   );
 }

@@ -52,6 +52,28 @@
   }
 }
 
+@keyframes mobile-menu-backdrop-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes mobile-menu-panel-in {
+  from {
+    opacity: 0;
+    transform: translateX(-2rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 .cart-notification {
   animation: cart-notification-in-out 3s ease-in-out forwards;
 }
@@ -64,6 +86,14 @@
   animation: cart-sheet-in 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+.mobile-menu-backdrop {
+  animation: mobile-menu-backdrop-in 180ms ease-out both;
+}
+
+.mobile-menu-panel {
+  animation: mobile-menu-panel-in 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 @media (min-width: 640px) {
   .cart-sheet {
     animation-name: cart-popover-in;
@@ -74,7 +104,9 @@
 @media (prefers-reduced-motion: reduce) {
   .cart-notification,
   .cart-backdrop,
-  .cart-sheet {
+  .cart-sheet,
+  .mobile-menu-backdrop,
+  .mobile-menu-panel {
     animation: none;
   }
 }
