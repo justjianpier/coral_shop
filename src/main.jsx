@@ -1,13 +1,10 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import { App } from "./app.jsx";
-import { CartProvider } from "./features/cart/context/cart-provider.jsx";
+import { App } from "./app/app.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <CartProvider>
-      <App />
-    </CartProvider>
+    <App />
   </StrictMode>,
 );

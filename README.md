@@ -1,16 +1,43 @@
-# React + Vite
+# Coral Shop
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Storefront built with React, React Router, Tailwind CSS, and Vite.
 
-Currently, two official plugins are available:
+## Commands
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```bash
+npm run dev
+npm run lint
+npm run build
+npm run preview
+```
 
-## React Compiler
+## Architecture
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```text
+src/
+├── app/       # Application setup, providers, routes, and layouts
+├── pages/     # Route-level composition
+├── features/  # Domain behavior such as products and cart
+├── shared/    # Domain-independent reusable components
+├── main.jsx   # Browser entry point
+└── index.css  # Global styles
+```
 
-## Expanding the ESLint configuration
+Dependencies flow in one direction:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```text
+app → pages → features → shared
+```
+
+- `app` may compose any lower layer.
+- `pages` integrate features into route-level screens.
+- A feature must not import another feature directly. Cross-feature behavior is
+  composed by a page or the application shell.
+- `shared` must not depend on application domains or pages.
+- Page-specific components stay next to their page.
+
+The products endpoint defaults to Fake Store API. It can be replaced through:
+
+```env
+VITE_PRODUCTS_API_URL=https://example.com/products
+```

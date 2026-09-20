@@ -64,7 +64,7 @@ export function Sidebar() {
               }`}
               title={collapsed ? item.name : undefined}
             >
-              <item.icon className="w-5 h-5 flex-shrink-0" />
+              <item.icon className="w-5 h-5 shrink-0" />
               {!collapsed && <span className="font-medium">{item.name}</span>}
             </Link>
           );
@@ -77,7 +77,7 @@ export function Sidebar() {
           className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-400 hover:bg-gray-800 hover:text-white transition-colors"
           title={collapsed ? "Back to Store" : undefined}
         >
-          <LogOut className="w-5 h-5 flex-shrink-0" />
+          <LogOut className="w-5 h-5 shrink-0" />
           {!collapsed && <span className="font-medium">Back to Store</span>}
         </Link>
       </div>
