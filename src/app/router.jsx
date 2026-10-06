@@ -5,6 +5,7 @@ import { Orders } from "../features/admin/pages/orders";
 import { Overview } from "../features/admin/pages/overview";
 import { ProductForm } from "../features/admin/pages/product-form";
 import { Products as AdminProducts } from "../features/admin/pages/products";
+import { CjImportPage } from "../features/admin/pages/cj-import-page";
 import { Users } from "../features/admin/pages/users";
 import { CartPage } from "../pages/cart/cart-page";
 import { AccountPage } from "../pages/account/account-page";
@@ -87,6 +88,7 @@ export const router = createBrowserRouter([
           { path: "users", Component: Users },
           { path: "products", Component: AdminProducts },
           { path: "products/new", Component: ProductForm },
+          { path: "products/import", Component: CjImportPage },
           { path: "products/:id/edit", element: <Navigate to="/admin/products" replace /> },
           { path: "orders", Component: Orders },
           { path: "categories", Component: Categories },

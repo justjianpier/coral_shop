@@ -1,4 +1,4 @@
-import { Package, Plus } from "lucide-react";
+import { Package, Plus, Search } from "lucide-react";
 import { Link } from "react-router";
 import {
   AdminBadge,
@@ -8,6 +8,7 @@ import {
   ErrorState,
 } from "../components/admin-ui";
 import { primaryButtonStyles } from "../components/admin-styles";
+import { secondaryButtonStyles } from "../components/admin-styles";
 import { useProducts } from "../hooks/use-products";
 
 const SKELETONS = Array.from({ length: 5 }, (_, index) => index);
@@ -23,12 +24,14 @@ export function Products() {
         eyebrow="Catalog"
         title="Products"
         description="Add garments to your catalog. Editing and deleting will be available in a future update."
-        actions={
-          <Link to="/admin/products/new" className={`${primaryButtonStyles} w-full sm:w-auto`}>
-            <Plus className="h-4 w-4" aria-hidden="true" />
-            Add product
+        actions={<div className="flex flex-wrap gap-3">
+          <Link to="/admin/products/import" className={secondaryButtonStyles}>
+            <Search className="h-4 w-4" aria-hidden="true" /> Import from CJ
           </Link>
-        }
+          <Link to="/admin/products/new" className={primaryButtonStyles}>
+            <Plus className="h-4 w-4" aria-hidden="true" /> Add product
+          </Link>
+        </div>}
       />
 
       <AdminPanel>
