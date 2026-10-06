@@ -57,13 +57,13 @@ export function RegisterPage() {
               Welcome to Coral, {registeredUser.username}.
             </h1>
             <p className="mt-4 leading-7 text-slate-600">
-              Your account has been saved. Sign-in and shopping with your account will be available in the next step.
+              Your account has been saved. Sign in to access your account.
             </p>
             <Link
-              to="/"
+              to="/login"
               className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#ff623f] px-5 py-3 font-semibold text-white transition hover:bg-[#e94727] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff623f]"
             >
-              Explore the store <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              Sign in <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
         ) : (
