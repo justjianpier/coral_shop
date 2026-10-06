@@ -23,6 +23,7 @@ import { HomePage } from "../pages/home/home-page";
 import { LoginPage } from "../pages/login/login-page";
 import { ProductDetailPage } from "../pages/product-detail/product-detail-page";
 import { ProductsPage } from "../pages/products/products-page";
+import { RegisterPage } from "../pages/register/register-page";
 import { AppLayout } from "./layouts/app-layout";
 import { StoreLayout } from "./layouts/store-layout";
 
@@ -75,6 +76,7 @@ export const router = createBrowserRouter([
         ],
       },
       { path: "login", Component: LoginPage },
+      { path: "register", Component: RegisterPage },
       {
         path: "admin",
         Component: AdminLayout,

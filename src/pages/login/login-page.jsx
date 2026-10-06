@@ -57,17 +57,21 @@ export function LoginPage() {
 
           <button
             type="submit"
-            className="w-full py-3 px-4 bg-[#FF623F] text-white font-semibold rounded-lg hover:shadow-lg hover:scale-[1.02] transition-all duration-300 shadow-md"
+            disabled
+            className="w-full py-3 px-4 bg-[#FF623F] text-white font-semibold rounded-lg opacity-60 cursor-not-allowed"
           >
             Sign In
           </button>
+          <p className="text-center text-sm text-gray-600">
+            Sign-in is coming soon. You can create an account in the meantime.
+          </p>
         </form>
 
         <p className="mt-8 text-center text-sm text-gray-600">
           Don't have an account?{" "}
-          <a href="#" className="font-medium text-[#FF623F] hover:underline">
+          <Link to="/register" className="font-medium text-[#FF623F] hover:underline">
             Sign up
-          </a>
+          </Link>
         </p>
 
         <div className="mt-6 pt-6 border-t border-gray-100">
