@@ -3,6 +3,7 @@ import { useCallback, useRef, useState } from "react";
 import { Link, useLocation } from "react-router";
 import { CartDropDown } from "../../features/cart/components/cart-dropdown";
 import { useCart } from "../../features/cart/hooks/use-cart";
+import { useAuth } from "../../features/auth/hooks/use-auth";
 import { MobileMenu } from "./mobile-menu";
 
 const HEADER_LINKS = [
@@ -22,6 +23,7 @@ const HEADER_LINKS = [
 ];
 
 export function Header() {
+  const { account, checking } = useAuth();
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const cartButtonRef = useRef(null);
@@ -71,6 +73,7 @@ export function Header() {
     (total, item) => total + item.quantity,
     0,
   );
+  const accountPath = account?.role === "ROLE_ADMIN" ? "/admin" : account ? "/account" : "/login";
 
   return (
     <header className="sticky top-0 z-50">
@@ -110,13 +113,20 @@ export function Header() {
               </Link>
             </div>
             <div className="relative col-start-2 col-end-3 flex justify-end gap-3 md:col-start-3 md:col-end-4">
-              <Link
-                to="/login"
-                className="grid h-10 w-10 place-items-center rounded-full text-slate-700 transition-colors hover:bg-stone-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff5331]"
-                aria-label="Open account"
-              >
-                <User aria-hidden="true" />
-              </Link>
+              {checking ? (
+                <span className="grid h-10 w-10 place-items-center text-slate-400" role="status" aria-label="Loading account">
+                  <User aria-hidden="true" />
+                </span>
+              ) : (
+                <Link
+                  to={accountPath}
+                  className="inline-flex min-h-10 items-center gap-2 rounded-full px-2 text-slate-700 transition-colors hover:bg-stone-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff5331]"
+                  aria-label={account ? `Open ${account.username}'s ${account.role === "ROLE_ADMIN" ? "dashboard" : "account"}` : "Sign in"}
+                >
+                  <User aria-hidden="true" />
+                  {account ? <span className="hidden max-w-24 truncate text-sm font-semibold sm:block lg:max-w-28">{account.username}</span> : null}
+                </Link>
+              )}
               <button
                 ref={cartButtonRef}
                 type="button"

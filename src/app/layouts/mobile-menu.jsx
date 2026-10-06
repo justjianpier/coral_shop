@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router";
+import { useAuth } from "../../features/auth/hooks/use-auth";
 
 const CATEGORY_LINKS = [
   {
@@ -36,6 +37,8 @@ const FOCUSABLE_ELEMENTS =
   'a[href], button:not([disabled]), summary, [tabindex]:not([tabindex="-1"])';
 
 export function MobileMenu({ cartItemCount, onClose }) {
+  const { account } = useAuth();
+  const accountPath = account?.role === "ROLE_ADMIN" ? "/admin" : account ? "/account" : "/login";
   const location = useLocation();
   const panelRef = useRef(null);
   const closeButtonRef = useRef(null);
@@ -187,12 +190,12 @@ export function MobileMenu({ cartItemCount, onClose }) {
               Shopping Cart
             </MobileNavLink>
             <MobileNavLink
-              to="/login"
+              to={accountPath}
               icon={LogIn}
-              isActive={isCurrentPath("/login")}
+              isActive={isCurrentPath(accountPath)}
               onClick={onClose}
             >
-              My Account
+              {account ? account.username : "Sign in"}
             </MobileNavLink>
           </div>
 

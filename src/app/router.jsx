@@ -7,6 +7,7 @@ import { ProductForm } from "../features/admin/pages/product-form";
 import { Products as AdminProducts } from "../features/admin/pages/products";
 import { Users } from "../features/admin/pages/users";
 import { CartPage } from "../pages/cart/cart-page";
+import { AccountPage } from "../pages/account/account-page";
 import { BlogsPage } from "../pages/content/blogs-page";
 import { CareersPage } from "../pages/content/careers-page";
 import { ContactUsPage } from "../pages/content/contact-us-page";
@@ -38,6 +39,7 @@ export const router = createBrowserRouter([
           { path: "products", Component: ProductsPage },
           { path: "product/:id", Component: ProductDetailPage },
           { path: "cart", Component: CartPage },
+          { path: "account", Component: AccountPage },
 
           // About us
           { path: "blogs", Component: BlogsPage },

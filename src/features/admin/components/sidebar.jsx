@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
+import { useAuth } from "../../auth/hooks/use-auth";
 import {
   ChevronLeft,
   LayoutDashboard,
@@ -23,8 +24,26 @@ const MENU_ITEMS = [
 
 export function Sidebar({ mobileOpen, onMobileClose }) {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { account, signOut } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
+  const [signOutError, setSignOutError] = useState("");
   const closeButtonRef = useRef(null);
+
+  async function handleSignOut() {
+    if (signingOut) return;
+    setSigningOut(true);
+    setSignOutError("");
+    try {
+      await signOut();
+      navigate("/login", { replace: true });
+    } catch (error) {
+      setSignOutError(error.message);
+    } finally {
+      setSigningOut(false);
+    }
+  }
 
   useEffect(() => {
     if (!mobileOpen) return undefined;
@@ -144,6 +163,10 @@ export function Sidebar({ mobileOpen, onMobileClose }) {
         </nav>
 
         <div className={`border-t border-white/8 p-4 ${collapsed ? "lg:px-3" : ""}`}>
+          <p className={`mb-2 truncate px-3.5 text-xs text-slate-400 ${collapsed ? "lg:sr-only" : ""}`}>
+            Signed in as <span className="font-semibold text-white">{account?.username}</span>
+          </p>
+          {signOutError ? <p role="alert" className="mb-2 px-3.5 text-xs text-red-300">{signOutError}</p> : null}
           <Link
             to="/"
             onClick={onMobileClose}
@@ -152,9 +175,19 @@ export function Sidebar({ mobileOpen, onMobileClose }) {
             }`}
             title={collapsed ? "Back to store" : undefined}
           >
-            <LogOut className="h-5 w-5 shrink-0" aria-hidden="true" />
+            <ShoppingCart className="h-5 w-5 shrink-0" aria-hidden="true" />
             <span className={collapsed ? "lg:sr-only" : ""}>Back to store</span>
           </Link>
+          <button
+            type="button"
+            onClick={handleSignOut}
+            disabled={signingOut}
+            className={`flex min-h-12 w-full items-center gap-3 rounded-xl px-3.5 text-sm font-bold text-slate-400 transition hover:bg-white/7 hover:text-white disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff7354] ${collapsed ? "lg:justify-center lg:px-0" : ""}`}
+            title={collapsed ? "Sign out" : undefined}
+          >
+            <LogOut className="h-5 w-5 shrink-0" aria-hidden="true" />
+            <span className={collapsed ? "lg:sr-only" : ""}>{signingOut ? "Signing out..." : "Sign out"}</span>
+          </button>
           <button
             type="button"
             onClick={() => setCollapsed((current) => !current)}

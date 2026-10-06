@@ -1,28 +1,14 @@
 import { ArrowLeft, Lock, Mail } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
-import { getCurrentUser, loginUser, logoutUser } from "../../features/auth/api/auth-api";
+import { useAuth } from "../../features/auth/hooks/use-auth";
 
 export function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [user, setUser] = useState(null);
-  const [checkingSession, setCheckingSession] = useState(true);
+  const { account: user, checking: checkingSession, error: sessionError, signIn, signOut } = useAuth();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-
-  useEffect(() => {
-    const controller = new AbortController();
-    getCurrentUser({ signal: controller.signal })
-      .then(setUser)
-      .catch((requestError) => {
-        if (!controller.signal.aborted) setError(requestError.message);
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setCheckingSession(false);
-      });
-    return () => controller.abort();
-  }, []);
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -32,14 +18,14 @@ export function LoginPage() {
     setSaving(true);
     setError("");
     try {
-      const account = await loginUser({
+      const account = await signIn({
         email: form.get("email").trim(),
         password: form.get("password"),
       });
-      setUser(account);
-      if (account.role === "ROLE_ADMIN" && location.state?.from?.startsWith("/admin")) {
-        navigate(location.state.from, { replace: true });
-      }
+      const destination = account.role === "ROLE_ADMIN" ? "/admin" : "/account";
+      const from = location.state?.from;
+      navigate(from === destination || (destination === "/admin" && from?.startsWith("/admin/"))
+        ? from : destination, { replace: true });
     } catch (requestError) {
       setError(
         requestError instanceof TypeError
@@ -55,8 +41,7 @@ export function LoginPage() {
     setSaving(true);
     setError("");
     try {
-      await logoutUser();
-      setUser(null);
+      await signOut();
     } catch (requestError) {
       setError(requestError.message);
     } finally {
@@ -74,19 +59,19 @@ export function LoginPage() {
           </p>
         </div>
 
-        {error ? (
+        {error || sessionError ? (
           <p role="alert" className="mb-5 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
-            {error}
+            {error || sessionError}
           </p>
         ) : null}
 
         {user ? (
           <div role="status" className="space-y-5 text-center">
             <p className="rounded-xl bg-orange-50 px-4 py-3 text-sm text-[#a43c26]">
-              Your session is active. You can continue browsing the store.
+              Your session is active.
             </p>
-            <Link to="/" className="block rounded-lg bg-[#FF623F] px-4 py-3 font-semibold text-white hover:bg-[#e94727]">
-              Back to store
+            <Link to={user.role === "ROLE_ADMIN" ? "/admin" : "/account"} className="block rounded-lg bg-[#FF623F] px-4 py-3 font-semibold text-white hover:bg-[#e94727]">
+              {user.role === "ROLE_ADMIN" ? "Open dashboard" : "Open my account"}
             </Link>
             <button
               type="button"

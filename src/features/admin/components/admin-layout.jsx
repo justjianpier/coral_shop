@@ -1,28 +1,13 @@
 import { Menu, Sparkles } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, Navigate, Outlet, useLocation } from "react-router";
-import { getCurrentUser } from "../../auth/api/auth-api";
+import { useAuth } from "../../auth/hooks/use-auth";
 import { Sidebar } from "./sidebar";
 
 export function AdminLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [account, setAccount] = useState(null);
-  const [checking, setChecking] = useState(true);
-  const [error, setError] = useState(null);
+  const { account, checking, error } = useAuth();
   const location = useLocation();
-
-  useEffect(() => {
-    const controller = new AbortController();
-    getCurrentUser({ signal: controller.signal })
-      .then(setAccount)
-      .catch((requestError) => {
-        if (!controller.signal.aborted) setError(requestError.message);
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setChecking(false);
-      });
-    return () => controller.abort();
-  }, []);
 
   if (checking) {
     return <div className="grid min-h-screen place-items-center text-slate-600" role="status">Checking admin access...</div>;
