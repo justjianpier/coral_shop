@@ -10,15 +10,15 @@ const HEADER_LINKS = [
   {
     id: 2,
     name: "Men's Clothing",
-    url: "/products?category=men%27s%20clothing",
+    url: "/products?category=Hombre",
   },
   {
     id: 3,
     name: "Women's Clothing",
-    url: "/products?category=women%27s%20clothing",
+    url: "/products?category=Mujer",
   },
-  { id: 4, name: "Jewelry", url: "/products?category=jewelery" },
-  { id: 5, name: "Best Sellers", url: "/products?sort=best-sellers" },
+  { id: 4, name: "Unisex", url: "/products?category=Unisex" },
+  { id: 5, name: "Price: Low to High", url: "/products?sort=price-low" },
 ];
 
 export function Header() {

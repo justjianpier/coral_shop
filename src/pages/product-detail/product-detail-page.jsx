@@ -1,4 +1,5 @@
-import { ShoppingCart, Star } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
+import { useState } from "react";
 import { Link, useParams } from "react-router";
 import { useCart } from "../../features/cart/hooks/use-cart";
 import { useProduct } from "../../features/products/hooks/use-product";
@@ -9,87 +10,87 @@ export function ProductDetailPage() {
   const { id } = useParams();
   const { product, isLoading, error } = useProduct(id);
   const { addToCart } = useCart();
+  const [selectedVariantId, setSelectedVariantId] = useState("");
 
   if (isLoading) return <ProductDetailSkeleton />;
-
-  if (error) {
+  if (error || !product) {
     return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4">
-        <ErrorState message={error} />
-        <Link
-          to="/"
-          className="text-sm font-semibold underline text-gray-600 hover:text-black"
-        >
-          Volver a la tienda
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4">
+        <ErrorState message={error || "Product not found"} />
+        <Link to="/products" className="text-sm font-semibold text-gray-600 underline hover:text-black">
+          Back to products
         </Link>
       </div>
     );
   }
 
-  const {
-    image,
-    title,
-    description,
-    price,
-    rating: { rate, count },
-  } = product;
+  const variant = product.variants.find((item) => item.id === Number(selectedVariantId));
+
+  function handleAddToCart() {
+    if (!variant || variant.stock < 1) return;
+    addToCart({
+      id: variant.id,
+      productId: product.id,
+      title: `${product.name} · ${variant.size} / ${variant.color}`,
+      image: product.imageUrl,
+      price: product.basePrice,
+      maxQuantity: Math.min(5, variant.stock),
+    });
+  }
 
   return (
-    <main className="max-w-7xl w-[90%] xl:w-[75%] mx-auto py-12">
-      <section className="flex flex-col gap-12 md:flex-row items-start">
-        <div className="w-full md:flex-1 bg-gray-50 rounded-2xl p-8 flex items-center justify-center min-h-100 max-h-125 border border-gray-100">
-          <img
-            className="max-h-95 w-auto object-contain mix-blend-multiply transition-transform duration-300 hover:scale-102"
-            src={image}
-            alt={title}
-          />
+    <main className="mx-auto w-[90%] max-w-7xl py-12 xl:w-[75%]">
+      <section className="flex flex-col items-start gap-12 md:flex-row">
+        <div className="flex min-h-100 w-full flex-1 items-center justify-center rounded-2xl border border-gray-100 bg-gray-50 p-8 md:max-h-125">
+          {product.imageUrl ? (
+            <img className="max-h-95 w-auto object-contain" src={product.imageUrl} alt={product.name} />
+          ) : (
+            <span className="text-gray-400">Image coming soon</span>
+          )}
         </div>
 
-        <div className="w-full md:flex-1 flex flex-col gap-6">
+        <div className="flex w-full flex-1 flex-col gap-6">
           <div>
-            <span className="text-xs font-bold tracking-wider uppercase px-2.5 py-1 rounded-md inline-block mb-3">
-              {product.category}
+            <span className="mb-3 inline-block rounded-md px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-[#e94727]">
+              {product.categoryName}{product.brandName ? ` · ${product.brandName}` : ""}
             </span>
-            <h1 className="text-3xl font-bold text-gray-900 tracking-tight leading-tight">
-              {title}
-            </h1>
-          </div>
-
-          <div className="flex items-center gap-3 border-b border-gray-100 pb-4">
-            <div className="flex items-center gap-1 bg-amber-50 px-2 py-1 rounded text-amber-700 font-semibold text-sm">
-              <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
-              {rate.toFixed(1)}
-            </div>
-            <span className="text-sm text-gray-500 font-medium">
-              ({count} customer reviews)
-            </span>
+            <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900">{product.name}</h1>
           </div>
 
           <div>
-            <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-2">
-              Description
-            </h2>
-            <p className="text-gray-600 text-base leading-relaxed">
-              {description}
-            </p>
+            <h2 className="mb-2 text-sm font-semibold uppercase tracking-wider text-gray-900">Description</h2>
+            <p className="leading-relaxed text-gray-600">{product.description || "No description yet."}</p>
           </div>
 
-          <div className="mt-4 pt-6 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">
-                Total Price
-              </p>
-              <p className="text-4xl font-extrabold text-gray-900">
-                ${price.toFixed(2)}
-              </p>
-            </div>
+          <div>
+            <label htmlFor="product-variant" className="mb-2 block text-sm font-semibold text-gray-900">
+              Size and color
+            </label>
+            <select
+              id="product-variant"
+              value={selectedVariantId}
+              onChange={(event) => setSelectedVariantId(event.target.value)}
+              disabled={product.variants.length === 0}
+              className="w-full rounded-xl border border-stone-200 bg-white px-4 py-3 text-gray-900 focus:border-[#ff5331] focus:outline-none disabled:opacity-50"
+            >
+              <option value="">Choose a size and color</option>
+              {product.variants.map((item) => (
+                <option key={item.id} value={item.id} disabled={item.stock < 1}>
+                  {item.size} / {item.color} — {item.stock > 0 ? `${item.stock} available` : "Out of stock"}
+                </option>
+              ))}
+            </select>
+          </div>
 
+          <div className="mt-4 flex flex-col gap-4 border-t border-gray-100 pt-6 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-4xl font-extrabold text-gray-900">${product.basePrice.toFixed(2)}</p>
             <button
               type="button"
-              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 bg-gray-900 hover:bg-black text-white px-8 py-4 rounded-xl font-semibold shadow-sm hover:shadow transition-all duration-200 active:scale-98 cursor-pointer"
-              onClick={() => addToCart(product)}
+              onClick={handleAddToCart}
+              disabled={!variant || variant.stock < 1}
+              className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-gray-900 px-8 py-4 font-semibold text-white transition-colors hover:bg-black disabled:cursor-not-allowed disabled:opacity-50 sm:flex-initial"
             >
-              <ShoppingCart className="w-5 h-5" />
+              <ShoppingCart className="h-5 w-5" aria-hidden="true" />
               Add to cart
             </button>
           </div>

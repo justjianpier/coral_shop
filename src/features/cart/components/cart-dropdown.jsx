@@ -144,7 +144,7 @@ export function CartDropDown({
                   className="grid grid-cols-[4.5rem_minmax(0,1fr)] gap-3 rounded-2xl border border-stone-200/80 bg-white p-3 shadow-[0_8px_24px_-20px_rgba(15,23,42,0.35)] sm:grid-cols-[5rem_minmax(0,1fr)] sm:gap-4"
                 >
                   <Link
-                    to={`/product/${item.id}`}
+                    to={`/product/${item.productId ?? item.id}`}
                     onClick={onClose}
                     className="grid h-20 w-18 place-items-center overflow-hidden rounded-xl bg-stone-50 p-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff5331] sm:h-24 sm:w-20"
                   >
@@ -159,7 +159,7 @@ export function CartDropDown({
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
                         <Link
-                          to={`/product/${item.id}`}
+                          to={`/product/${item.productId ?? item.id}`}
                           onClick={onClose}
                           className="line-clamp-2 text-sm font-semibold leading-5 text-slate-800 transition-colors hover:text-[#ff5331] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff5331] sm:text-[0.95rem]"
                         >
@@ -201,7 +201,7 @@ export function CartDropDown({
                           type="button"
                           className="grid h-8 w-8 place-items-center rounded-lg text-slate-600 transition-colors hover:bg-white hover:text-slate-950 disabled:cursor-not-allowed disabled:opacity-35 focus-visible:outline-2 focus-visible:outline-[#ff5331]"
                           aria-label={`Increase quantity of ${item.title}`}
-                          disabled={item.quantity >= MAX_CART_ITEMS}
+                          disabled={item.quantity >= Math.min(MAX_CART_ITEMS, item.maxQuantity ?? MAX_CART_ITEMS)}
                           onClick={() => increaseQuantity(item.id)}
                         >
                           <Plus className="h-3.5 w-3.5" aria-hidden="true" />

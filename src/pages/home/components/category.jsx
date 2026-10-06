@@ -1,14 +1,15 @@
+import { Link } from "react-router";
+
 export function Category() {
   const categories = [
     {
       id: 1,
       image: "/category_women.jpg",
       title: "Women's Clothing",
-      items: 1234,
+      category: "Mujer",
     },
-    { id: 2, image: "category_men.jpg", title: "Men's Clothing", items: 856 },
-    { id: 3, image: "category_jewelry.jpg", title: "Jewelry", items: 2341 },
-    { id: 4, image: "category_home.jpg", title: "Home Decor", items: 678 },
+    { id: 2, image: "/category_men.jpg", title: "Men's Clothing", category: "Hombre" },
+    { id: 3, image: "/category_women.jpg", title: "Unisex", category: "Unisex" },
   ];
 
   return (
@@ -23,9 +24,10 @@ export function Category() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           {categories.map((category) => (
-            <div
+            <Link
+              to={`/products?category=${encodeURIComponent(category.category)}`}
               className="relative aspect-4/5 rounded-2xl overflow-hidden cursor-pointer group"
               key={category.id}
             >
@@ -39,11 +41,9 @@ export function Category() {
 
               <div className="absolute z-10 bottom-0 p-8 text-white">
                 <h3 className="text-2xl mb-2">{category.title}</h3>
-                <p className="text-sm text-white/90 bg-white/10 backdrop-blur-sm inline-block px-3 py-1 rounded-full">
-                  {category.items} items
-                </p>
+                <span className="text-sm text-white/90">Explore collection</span>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

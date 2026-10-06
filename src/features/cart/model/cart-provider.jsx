@@ -34,7 +34,7 @@ export function CartProvider({ children }) {
   const addToCart = useCallback(
     (item) => {
       const existingItem = cart.find((cartItem) => cartItem.id === item.id);
-      if (existingItem?.quantity >= MAX_CART_ITEMS) return;
+      if (existingItem?.quantity >= Math.min(MAX_CART_ITEMS, existingItem.maxQuantity ?? MAX_CART_ITEMS)) return;
 
       dispatch({ type: CART_ACTIONS.add, item });
       showNotification("Producto agregado al carrito correctamente.", "success");

@@ -120,7 +120,7 @@ export function CartPage() {
                     className="grid grid-cols-[5.5rem_minmax(0,1fr)] gap-4 py-5 sm:grid-cols-[7rem_minmax(0,1fr)] sm:gap-5 sm:py-6 md:grid-cols-[7rem_minmax(0,1fr)_auto]"
                   >
                     <Link
-                      to={`/product/${item.id}`}
+                      to={`/product/${item.productId ?? item.id}`}
                       className="grid h-28 w-[5.5rem] place-items-center overflow-hidden rounded-2xl border border-stone-100 bg-stone-50 p-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff5331] sm:h-32 sm:w-28"
                       aria-label={`View ${item.title}`}
                     >
@@ -134,7 +134,7 @@ export function CartPage() {
                     <div className="flex min-w-0 flex-col justify-between gap-4">
                       <div>
                         <Link
-                          to={`/product/${item.id}`}
+                          to={`/product/${item.productId ?? item.id}`}
                           className="line-clamp-2 text-sm font-bold leading-5 text-slate-900 transition-colors hover:text-[#ff5331] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff5331] sm:text-base sm:leading-6"
                         >
                           {item.title}
@@ -164,7 +164,7 @@ export function CartPage() {
                           <button
                             type="button"
                             onClick={() => increaseQuantity(item.id)}
-                            disabled={item.quantity >= MAX_CART_ITEMS}
+                            disabled={item.quantity >= Math.min(MAX_CART_ITEMS, item.maxQuantity ?? MAX_CART_ITEMS)}
                             className="grid h-9 w-9 place-items-center rounded-lg text-slate-600 transition-colors hover:bg-white hover:text-slate-950 disabled:cursor-not-allowed disabled:opacity-35 focus-visible:outline-2 focus-visible:outline-[#ff5331]"
                             aria-label={`Increase quantity of ${item.title}`}
                           >

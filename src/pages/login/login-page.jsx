@@ -1,9 +1,11 @@
 import { ArrowLeft, Lock, Mail } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { getCurrentUser, loginUser, logoutUser } from "../../features/auth/api/auth-api";
 
 export function LoginPage() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [user, setUser] = useState(null);
   const [checkingSession, setCheckingSession] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -35,6 +37,9 @@ export function LoginPage() {
         password: form.get("password"),
       });
       setUser(account);
+      if (account.role === "ROLE_ADMIN" && location.state?.from?.startsWith("/admin")) {
+        navigate(location.state.from, { replace: true });
+      }
     } catch (requestError) {
       setError(
         requestError instanceof TypeError

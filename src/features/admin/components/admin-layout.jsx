@@ -1,10 +1,47 @@
 import { Menu, Sparkles } from "lucide-react";
-import { useState } from "react";
-import { Link, Outlet } from "react-router";
+import { useEffect, useState } from "react";
+import { Link, Navigate, Outlet, useLocation } from "react-router";
+import { getCurrentUser } from "../../auth/api/auth-api";
 import { Sidebar } from "./sidebar";
 
 export function AdminLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [account, setAccount] = useState(null);
+  const [checking, setChecking] = useState(true);
+  const [error, setError] = useState(null);
+  const location = useLocation();
+
+  useEffect(() => {
+    const controller = new AbortController();
+    getCurrentUser({ signal: controller.signal })
+      .then(setAccount)
+      .catch((requestError) => {
+        if (!controller.signal.aborted) setError(requestError.message);
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setChecking(false);
+      });
+    return () => controller.abort();
+  }, []);
+
+  if (checking) {
+    return <div className="grid min-h-screen place-items-center text-slate-600" role="status">Checking admin access...</div>;
+  }
+  if (error) {
+    return <div className="grid min-h-screen place-items-center px-6 text-center text-red-700" role="alert">{error}</div>;
+  }
+  if (!account) {
+    return <Navigate to="/login" state={{ from: location.pathname }} replace />;
+  }
+  if (account.role !== "ROLE_ADMIN") {
+    return (
+      <div className="grid min-h-screen place-content-center gap-4 px-6 text-center">
+        <h1 className="text-2xl font-bold text-slate-950">Admin access required</h1>
+        <p className="text-slate-600">Your account cannot access this dashboard.</p>
+        <Link to="/" className="font-semibold text-[#e94727] hover:underline">Back to store</Link>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#f7f5f1] lg:flex">

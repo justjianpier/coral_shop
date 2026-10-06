@@ -9,18 +9,18 @@ const FOOTER_SECTIONS = [
       {
         id: "c2",
         name: "Men's Clothing",
-        url: "/products?category=men%27s%20clothing",
+        url: "/products?category=Hombre",
       },
       {
         id: "c3",
         name: "Women's Clothing",
-        url: "/products?category=women%27s%20clothing",
+        url: "/products?category=Mujer",
       },
-      { id: "c4", name: "Jewelry", url: "/products?category=jewelery" },
+      { id: "c4", name: "Unisex", url: "/products?category=Unisex" },
       {
         id: "c5",
-        name: "Best Sellers",
-        url: "/products?sort=best-sellers",
+        name: "Price: Low to High",
+        url: "/products?sort=price-low",
       },
     ],
   },

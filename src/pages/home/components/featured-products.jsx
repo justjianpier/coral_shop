@@ -1,5 +1,4 @@
 import { Link } from "react-router";
-import { useCart } from "../../../features/cart/hooks/use-cart";
 import { ProductCard } from "../../../features/products/components/product-card";
 import { useProducts } from "../../../features/products/hooks/use-products";
 import { ErrorState } from "../../../shared/components/error-state";
@@ -7,7 +6,6 @@ import { LoadingState } from "../../../shared/components/loading-state";
 
 export function FeaturedProducts() {
   const { products, isLoading, error } = useProducts();
-  const { addToCart } = useCart();
 
   if (isLoading) return <LoadingState message="Loading featured products..." />;
   if (error) return <ErrorState message={error} />;
@@ -28,15 +26,17 @@ export function FeaturedProducts() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
-          {products.slice(0, 3).map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              onAddToCart={() => addToCart(product)}
-            />
-          ))}
-        </div>
+        {products.length ? (
+          <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
+            {products.slice(0, 3).map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        ) : (
+          <p className="rounded-2xl border border-stone-200 bg-white px-6 py-10 text-center text-slate-500">
+            Our collection is coming soon.
+          </p>
+        )}
       </div>
     </section>
   );

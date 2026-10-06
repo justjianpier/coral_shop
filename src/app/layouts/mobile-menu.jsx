@@ -13,15 +13,14 @@ import { Link, useLocation } from "react-router";
 const CATEGORY_LINKS = [
   {
     label: "Men's Clothing",
-    to: "/products?category=men%27s%20clothing",
+    to: "/products?category=Hombre",
   },
   {
     label: "Women's Clothing",
-    to: "/products?category=women%27s%20clothing",
+    to: "/products?category=Mujer",
   },
-  { label: "Jewelry", to: "/products?category=jewelery" },
-  { label: "Electronics", to: "/products?category=electronics" },
-  { label: "Best Sellers", to: "/products?sort=best-sellers" },
+  { label: "Unisex", to: "/products?category=Unisex" },
+  { label: "Price: Low to High", to: "/products?sort=price-low" },
 ];
 
 const HELP_LINKS = [

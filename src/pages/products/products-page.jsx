@@ -1,5 +1,4 @@
 import { useSearchParams } from "react-router";
-import { useCart } from "../../features/cart/hooks/use-cart";
 import { ProductCard } from "../../features/products/components/product-card";
 import { useProducts } from "../../features/products/hooks/use-products";
 import { ProductsSkeleton } from "../../features/products/skeletons/products-skeleton";
@@ -7,28 +6,25 @@ import { ErrorState } from "../../shared/components/error-state";
 
 export function ProductsPage() {
   const { products, isLoading, error } = useProducts();
-  const { addToCart } = useCart();
   const [searchParams] = useSearchParams();
 
   const category = searchParams.get("category");
   const sort = searchParams.get("sort");
 
   let visibleProducts = category
-    ? products.filter((product) => product.category === category)
+    ? products.filter((product) => product.categoryName.toLowerCase() === category.toLowerCase())
     : products;
 
-  if (sort === "best-sellers") {
+  if (sort === "price-low") {
     visibleProducts = [...visibleProducts].sort(
-      (a, b) => b.rating.rate * b.rating.count - a.rating.rate * a.rating.count,
+      (a, b) => a.basePrice - b.basePrice,
     );
   }
 
-  const pageTitle = sort === "best-sellers"
-    ? "Best Sellers"
+  const pageTitle = sort === "price-low"
+    ? "Price: Low to High"
     : category
-      ? category === "jewelery"
-        ? "Jewelry"
-        : category.replace(/\b\w/g, (letter) => letter.toUpperCase())
+      ? category
       : "All Products";
 
   if (isLoading) return <ProductsSkeleton />;
@@ -46,7 +42,6 @@ export function ProductsPage() {
             <ProductCard
               key={product.id}
               product={product}
-              onAddToCart={() => addToCart(product)}
             />
           ))}
         </div>

@@ -27,7 +27,7 @@ export function Overview() {
     return (
       <ErrorState
         error={error}
-        detail="Make sure the backend server is running on localhost:8080."
+        detail="Make sure the backend server is running on localhost:8082."
       />
     );
   }

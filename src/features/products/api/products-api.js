@@ -1,6 +1,4 @@
-const PRODUCTS_API_URL = (
-  import.meta.env.VITE_PRODUCTS_API_URL ?? "https://fakestoreapi.com/products"
-).replace(/\/$/, "");
+const PRODUCTS_API_URL = "/api/products";
 
 async function requestProducts(endpoint = "", { signal } = {}) {
   const response = await fetch(`${PRODUCTS_API_URL}${endpoint}`, { signal });
