@@ -1,205 +1,168 @@
-import { ArrowLeft, Check, PackagePlus, Save, Sparkles } from "lucide-react";
-import { useState } from "react";
-import { Link, useNavigate, useParams } from "react-router";
-import {
-  AdminPageHeader,
-  AdminPanel,
-  ErrorState,
-} from "../components/admin-ui";
-import {
-  fieldStyles,
-  primaryButtonStyles,
-  secondaryButtonStyles,
-} from "../components/admin-styles";
+import { ArrowLeft, Image, PackagePlus, Plus, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router";
+import { AdminPageHeader, AdminPanel, ErrorState } from "../components/admin-ui";
+import { fieldStyles, primaryButtonStyles, secondaryButtonStyles } from "../components/admin-styles";
 import { useCategories } from "../hooks/use-categories";
-import { useProduct } from "../hooks/use-products";
 import { productsService } from "../services/products-service";
 
-function getInitialFormData(product) {
-  return {
-    name: product?.name || "",
-    description: product?.description || "",
-    basePrice: product?.basePrice || "",
-    categoryId: product?.categoryId || "",
-    isActive: product?.isActive ?? true,
-  };
-}
+const newVariant = (key) => ({ key, sizeId: "", colorId: "", sku: "", stock: "0" });
 
 export function ProductForm() {
-  const { id } = useParams();
-  const isEdit = Boolean(id);
   const navigate = useNavigate();
-  const { product, loading: loadingProduct, error: productError } = useProduct(id);
-  const { categories, error: categoriesError } = useCategories();
-
-  const [formData, setFormData] = useState(() => getInitialFormData(null));
+  const { categories, loading: loadingCategories, error: categoriesError } = useCategories();
+  const [options, setOptions] = useState(null);
+  const [optionsError, setOptionsError] = useState("");
+  const [form, setForm] = useState({
+    name: "", description: "", basePrice: "", categoryId: "", imageUrl: "", isActive: true,
+  });
+  const [variants, setVariants] = useState([newVariant(1)]);
   const [saving, setSaving] = useState(false);
-  const [submitError, setSubmitError] = useState(null);
-  const [prevProduct, setPrevProduct] = useState(null);
+  const [submitError, setSubmitError] = useState("");
 
-  if (product && product !== prevProduct) {
-    setPrevProduct(product);
-    setFormData(getInitialFormData(product));
+  useEffect(() => {
+    let cancelled = false;
+    productsService.getOptions()
+      .then((data) => { if (!cancelled) setOptions(data); })
+      .catch((error) => { if (!cancelled) setOptionsError(error.message); });
+    return () => { cancelled = true; };
+  }, []);
+
+  function updateVariant(key, field, value) {
+    setVariants((current) => current.map((item) => item.key === key ? { ...item, [field]: value } : item));
   }
 
-  const handleSubmit = async (event) => {
+  async function handleSubmit(event) {
     event.preventDefault();
+    if (saving) return;
+    const combos = variants.map((variant) => `${variant.sizeId}:${variant.colorId}`);
+    const skus = variants.map((variant) => variant.sku.trim());
+    if (new Set(combos).size !== combos.length || new Set(skus).size !== skus.length) {
+      setSubmitError("Each size/color combination and SKU must be unique.");
+      return;
+    }
     setSaving(true);
-    setSubmitError(null);
-
+    setSubmitError("");
     try {
-      const payload = {
-        ...formData,
-        basePrice: parseFloat(formData.basePrice),
-        categoryId: formData.categoryId ? Number(formData.categoryId) : null,
-      };
-
-      if (isEdit) {
-        await productsService.update(id, payload);
-      } else {
-        await productsService.create(payload);
-      }
-      navigate("/admin/products");
-    } catch (requestError) {
-      setSubmitError(requestError.message);
+      await productsService.create({
+        ...form,
+        name: form.name.trim(),
+        imageUrl: form.imageUrl.trim(),
+        basePrice: Number(form.basePrice),
+        categoryId: Number(form.categoryId),
+        variants: variants.map(({ sizeId, colorId, sku, stock }) => ({
+          sizeId: Number(sizeId), colorId: Number(colorId), sku: sku.trim(), stock: Number(stock),
+        })),
+      });
+      navigate("/admin/products", { replace: true });
+    } catch (error) {
+      setSubmitError(error.message);
     } finally {
       setSaving(false);
     }
-  };
-
-  if (productError || categoriesError) {
-    return <ErrorState error={productError || categoriesError} />;
   }
 
-  if (isEdit && loadingProduct) return <ProductFormSkeleton />;
+  if (categoriesError || optionsError) return <ErrorState error={categoriesError || optionsError} />;
 
   return (
     <div className="mx-auto max-w-5xl">
-      <Link
-        to="/admin/products"
-        className="mb-5 inline-flex items-center gap-2 rounded-lg text-sm font-bold text-slate-500 transition hover:text-[#e94727] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff5331]"
-      >
-        <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-        Back to products
+      <Link to="/admin/products" className="mb-5 inline-flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-[#e94727]">
+        <ArrowLeft className="h-4 w-4" aria-hidden="true" /> Back to products
       </Link>
+      <AdminPageHeader eyebrow="Catalog · New item" title="Create product" description="Add a garment with a photo, price, and at least one size/color variant." />
 
-      <AdminPageHeader
-        eyebrow={isEdit ? "Catalog · Editing" : "Catalog · New item"}
-        title={isEdit ? "Edit product" : "Create product"}
-        description={isEdit ? "Refine the product information customers see in your storefront." : "Add a new piece to your catalog with clear details and pricing."}
-      />
+      {submitError ? <p role="alert" className="mb-6 rounded-xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-700">{submitError}</p> : null}
 
-      {submitError ? (
-        <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-sm font-semibold text-red-700" role="alert">
-          {submitError}
-        </div>
-      ) : null}
-
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_18rem]">
-          <AdminPanel className="p-5 sm:p-7">
-            <div className="mb-7 flex items-center gap-3">
-              <span className="grid h-11 w-11 place-items-center rounded-2xl bg-[#fff0eb] text-[#e94727]">
-                <PackagePlus className="h-5 w-5" aria-hidden="true" />
-              </span>
-              <div>
-                <h2 className="font-black text-slate-950">Product details</h2>
-                <p className="text-xs text-slate-400">Fields marked required must be completed.</p>
-              </div>
-            </div>
-
-            <div className="space-y-5">
-              <FormField id="product-name" label="Product name" required>
-                <input
-                  id="product-name"
-                  type="text"
-                  value={formData.name}
-                  onChange={(event) => setFormData((current) => ({ ...current, name: event.target.value }))}
-                  required
-                  className={`${fieldStyles} mt-2`}
-                  placeholder="e.g. Handcrafted coral necklace"
-                />
-              </FormField>
-
-              <FormField id="product-description" label="Description">
-                <textarea
-                  id="product-description"
-                  value={formData.description}
-                  onChange={(event) => setFormData((current) => ({ ...current, description: event.target.value }))}
-                  rows={6}
-                  className={`${fieldStyles} mt-2 resize-y`}
-                  placeholder="Describe the materials, details, and story behind this product."
-                />
-              </FormField>
-
-              <div className="grid gap-5 sm:grid-cols-2">
-                <FormField id="product-price" label="Base price" required>
-                  <div className="relative mt-2">
-                    <span className="pointer-events-none absolute inset-y-0 left-4 flex items-center text-sm font-bold text-slate-400">$</span>
-                    <input
-                      id="product-price"
-                      type="number"
-                      step="0.01"
-                      min="0"
-                      value={formData.basePrice}
-                      onChange={(event) => setFormData((current) => ({ ...current, basePrice: event.target.value }))}
-                      required
-                      className={`${fieldStyles} pl-8`}
-                      placeholder="0.00"
-                    />
-                  </div>
-                </FormField>
-
-                <FormField id="product-category" label="Category">
-                  <select
-                    id="product-category"
-                    value={formData.categoryId}
-                    onChange={(event) => setFormData((current) => ({ ...current, categoryId: event.target.value }))}
-                    className={`${fieldStyles} mt-2 bg-stone-50`}
-                  >
-                    <option value="">Select category</option>
-                    {categories.map((category) => (
-                      <option key={category.id} value={category.id}>{category.name}</option>
-                    ))}
-                  </select>
-                </FormField>
-              </div>
+          <AdminPanel className="space-y-5 p-5 sm:p-7">
+            <h2 className="flex items-center gap-3 text-lg font-black text-slate-950"><PackagePlus className="h-5 w-5 text-[#e94727]" aria-hidden="true" /> Product details</h2>
+            <Field id="product-name" label="Product name">
+              <input id="product-name" required maxLength={180} value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} className={`${fieldStyles} mt-2`} placeholder="e.g. Linen shirt" />
+            </Field>
+            <Field id="product-description" label="Description" required={false}>
+              <textarea id="product-description" rows={4} value={form.description} onChange={(event) => setForm({ ...form, description: event.target.value })} className={`${fieldStyles} mt-2 resize-y`} placeholder="Materials, fit and care details" />
+            </Field>
+            <div className="grid gap-5 sm:grid-cols-2">
+              <Field id="product-price" label="Price ($)">
+                <input id="product-price" required type="number" min="0" max="9999999999.99" step="0.01" value={form.basePrice} onChange={(event) => setForm({ ...form, basePrice: event.target.value })} className={`${fieldStyles} mt-2`} />
+              </Field>
+              <Field id="product-category" label="Category">
+                <select id="product-category" required value={form.categoryId} onChange={(event) => setForm({ ...form, categoryId: event.target.value })} className={`${fieldStyles} mt-2`}>
+                  <option value="">Select category</option>
+                  {categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
+                </select>
+              </Field>
             </div>
           </AdminPanel>
 
           <div className="space-y-5">
-            <AdminPanel className="p-5 sm:p-6">
-              <p className="text-[0.65rem] font-black uppercase tracking-[0.18em] text-[#e94727]">Visibility</p>
-              <label htmlFor="product-active" className="mt-4 flex cursor-pointer items-start gap-3 rounded-2xl border border-stone-200 bg-stone-50 p-4 transition hover:border-stone-300">
-                <input
-                  id="product-active"
-                  type="checkbox"
-                  checked={formData.isActive}
-                  onChange={(event) => setFormData((current) => ({ ...current, isActive: event.target.checked }))}
-                  className="mt-0.5 h-5 w-5 rounded border-stone-300 accent-[#ff5331] focus:ring-[#ff5331]"
-                />
-                <span>
-                  <span className="block text-sm font-black text-slate-900">Active product</span>
-                  <span className="mt-1 block text-xs leading-5 text-slate-500">Available to customers in the storefront.</span>
-                </span>
-              </label>
+            <AdminPanel className="space-y-4 p-5 sm:p-6">
+              <h2 className="flex items-center gap-2 font-black text-slate-950"><Image className="h-5 w-5 text-[#e94727]" aria-hidden="true" /> Product image</h2>
+              <Field id="product-image" label="Image URL">
+                <input id="product-image" type="url" required pattern="https?://.+" value={form.imageUrl} onChange={(event) => setForm({ ...form, imageUrl: event.target.value })} className={`${fieldStyles} mt-2`} placeholder="https://example.com/shirt.jpg" />
+              </Field>
+              <p className="text-xs leading-5 text-slate-500">Paste a public HTTPS image URL. File uploads are not available yet.</p>
+              {form.imageUrl.startsWith("https://") || form.imageUrl.startsWith("http://") ? (
+                <img src={form.imageUrl} alt="Product preview" className="h-40 w-full rounded-xl bg-stone-50 object-contain" />
+              ) : null}
             </AdminPanel>
-
-            <div className="rounded-[1.5rem] bg-slate-950 p-5 text-white sm:p-6">
-              <Sparkles className="h-5 w-5 text-[#ff7354]" aria-hidden="true" />
-              <p className="mt-4 font-black">Ready to publish?</p>
-              <p className="mt-2 text-xs leading-5 text-slate-400">Review the name, price, category, and visibility before saving.</p>
-            </div>
+            <AdminPanel className="p-5 sm:p-6">
+              <label htmlFor="product-active" className="flex items-center gap-3 text-sm font-bold text-slate-900">
+                <input id="product-active" type="checkbox" checked={form.isActive} onChange={(event) => setForm({ ...form, isActive: event.target.checked })} className="h-5 w-5 accent-[#ff5331]" />
+                Visible in the storefront
+              </label>
+              <p className="mt-2 text-xs text-slate-500">Uncheck to save without publishing.</p>
+            </AdminPanel>
           </div>
         </div>
 
-        <div className="mt-6 flex flex-col-reverse gap-3 rounded-[1.5rem] border border-stone-200/80 bg-white p-4 sm:flex-row sm:justify-end sm:p-5">
-          <button type="button" onClick={() => navigate("/admin/products")} className={secondaryButtonStyles}>
-            Cancel
-          </button>
-          <button type="submit" disabled={saving} className={primaryButtonStyles}>
-            {saving ? <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/35 border-t-white" aria-hidden="true" /> : isEdit ? <Save className="h-4 w-4" aria-hidden="true" /> : <Check className="h-4 w-4" aria-hidden="true" />}
-            {saving ? "Saving..." : isEdit ? "Save changes" : "Create product"}
+        <AdminPanel className="p-5 sm:p-7">
+          <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 className="text-lg font-black text-slate-950">Sizes, colors & stock</h2>
+              <p className="text-sm text-slate-500">Add one row per size and color. SKU must be unique across the catalog.</p>
+            </div>
+            <button type="button" onClick={() => setVariants((current) => [...current, newVariant(Math.max(...current.map((item) => item.key)) + 1)])} className={secondaryButtonStyles}>
+              <Plus className="h-4 w-4" aria-hidden="true" /> Add variant
+            </button>
+          </div>
+          <div className="space-y-4">
+            {variants.map((variant, index) => (
+              <div key={variant.key} className="rounded-2xl border border-stone-200 bg-stone-50 p-4">
+                <div className="mb-3 flex items-center justify-between">
+                  <h3 className="text-sm font-bold text-slate-700">Variant {index + 1}</h3>
+                  <button type="button" disabled={variants.length === 1} onClick={() => setVariants((current) => current.filter((item) => item.key !== variant.key))} aria-label={`Remove variant ${index + 1}`} className="rounded-lg p-2 text-slate-500 hover:bg-red-50 hover:text-red-600 disabled:opacity-40"><Trash2 className="h-4 w-4" aria-hidden="true" /></button>
+                </div>
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                  <Field id={`size-${variant.key}`} label="Size">
+                    <select id={`size-${variant.key}`} required value={variant.sizeId} onChange={(event) => updateVariant(variant.key, "sizeId", event.target.value)} className={`${fieldStyles} mt-2`}>
+                      <option value="">Select size</option>
+                      {options?.sizes.map((size) => <option key={size.id} value={size.id}>{size.name}</option>)}
+                    </select>
+                  </Field>
+                  <Field id={`color-${variant.key}`} label="Color">
+                    <select id={`color-${variant.key}`} required value={variant.colorId} onChange={(event) => updateVariant(variant.key, "colorId", event.target.value)} className={`${fieldStyles} mt-2`}>
+                      <option value="">Select color</option>
+                      {options?.colors.map((color) => <option key={color.id} value={color.id}>{color.name}</option>)}
+                    </select>
+                  </Field>
+                  <Field id={`sku-${variant.key}`} label="SKU">
+                    <input id={`sku-${variant.key}`} required maxLength={80} value={variant.sku} onChange={(event) => updateVariant(variant.key, "sku", event.target.value)} className={`${fieldStyles} mt-2`} placeholder="SHIRT-BLK-M" />
+                  </Field>
+                  <Field id={`stock-${variant.key}`} label="Stock">
+                    <input id={`stock-${variant.key}`} required type="number" min="0" max="2147483647" step="1" value={variant.stock} onChange={(event) => updateVariant(variant.key, "stock", event.target.value)} className={`${fieldStyles} mt-2`} />
+                  </Field>
+                </div>
+              </div>
+            ))}
+          </div>
+        </AdminPanel>
+
+        <div className="flex flex-col-reverse gap-3 rounded-2xl border border-stone-200 bg-white p-5 sm:flex-row sm:justify-end">
+          <Link to="/admin/products" className={secondaryButtonStyles}>Cancel</Link>
+          <button type="submit" disabled={saving || loadingCategories || !options || categories.length === 0} className={primaryButtonStyles}>
+            {saving ? "Saving..." : "Create product"}
           </button>
         </div>
       </form>
@@ -207,29 +170,13 @@ export function ProductForm() {
   );
 }
 
-function FormField({ id, label, required = false, children }) {
+function Field({ id, label, required = true, children }) {
   return (
     <div>
       <label htmlFor={id} className="text-sm font-bold text-slate-700">
-        {label}{required ? <span className="ml-1 text-[#e94727]" aria-hidden="true">*</span> : null}
+        {label}{required ? <span className="ml-1 text-[#e94727]">*</span> : null}
       </label>
       {children}
-    </div>
-  );
-}
-
-function ProductFormSkeleton() {
-  return (
-    <div className="mx-auto max-w-5xl animate-pulse space-y-6">
-      <div className="h-4 w-32 rounded bg-stone-200" />
-      <div className="space-y-3">
-        <div className="h-4 w-24 rounded bg-stone-200" />
-        <div className="h-10 w-56 rounded bg-stone-200" />
-      </div>
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_18rem]">
-        <div className="h-[30rem] rounded-[1.5rem] bg-white" />
-        <div className="h-48 rounded-[1.5rem] bg-white" />
-      </div>
     </div>
   );
 }

@@ -87,7 +87,7 @@ export const router = createBrowserRouter([
           { path: "users", Component: Users },
           { path: "products", Component: AdminProducts },
           { path: "products/new", Component: ProductForm },
-          { path: "products/:id/edit", Component: ProductForm },
+          { path: "products/:id/edit", element: <Navigate to="/admin/products" replace /> },
           { path: "orders", Component: Orders },
           { path: "categories", Component: Categories },
         ],

@@ -1,9 +1,7 @@
 import { api } from "./api";
 
 export const productsService = {
-  getAll: () => api.get("/products"),
-  getById: (id) => api.get(`/products/${id}`),
-  create: (product) => api.post("/products", product),
-  update: (id, product) => api.put(`/products/${id}`, product),
-  delete: (id) => api.delete(`/products/${id}`),
+  getAll: () => api.get("/admin/products"),
+  getOptions: () => api.get("/admin/catalog-options"),
+  create: (product) => api.post("/admin/products", product),
 };

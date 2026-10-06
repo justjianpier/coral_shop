@@ -120,11 +120,14 @@ export function Header() {
               ) : (
                 <Link
                   to={accountPath}
-                  className="inline-flex min-h-10 items-center gap-2 rounded-full px-2 text-slate-700 transition-colors hover:bg-stone-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff5331]"
+                  className={`grid h-10 w-10 place-items-center rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff5331] ${account ? "bg-[#ff5331] text-white hover:bg-[#e94727]" : "text-slate-700 hover:bg-stone-100"}`}
                   aria-label={account ? `Open ${account.username}'s ${account.role === "ROLE_ADMIN" ? "dashboard" : "account"}` : "Sign in"}
                 >
-                  <User aria-hidden="true" />
-                  {account ? <span className="hidden max-w-24 truncate text-sm font-semibold sm:block lg:max-w-28">{account.username}</span> : null}
+                  {account ? (
+                    <span aria-hidden="true" className="text-base font-bold uppercase">
+                      {account.username.trim().charAt(0)}
+                    </span>
+                  ) : <User aria-hidden="true" />}
                 </Link>
               )}
               <button

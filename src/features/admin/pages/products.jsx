@@ -1,5 +1,4 @@
-import { Package, Pencil, Plus, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { Package, Plus } from "lucide-react";
 import { Link } from "react-router";
 import {
   AdminBadge,
@@ -9,21 +8,12 @@ import {
   ErrorState,
 } from "../components/admin-ui";
 import { primaryButtonStyles } from "../components/admin-styles";
-import { ConfirmModal } from "../components/confirm-modal";
 import { useProducts } from "../hooks/use-products";
 
 const SKELETONS = Array.from({ length: 5 }, (_, index) => index);
 
 export function Products() {
-  const { products, loading, error, deleteProduct } = useProducts();
-  const [deleteId, setDeleteId] = useState(null);
-
-  const handleDelete = async () => {
-    if (deleteId) {
-      await deleteProduct(deleteId);
-      setDeleteId(null);
-    }
-  };
+  const { products, loading, error } = useProducts();
 
   if (error) return <ErrorState error={error} />;
 
@@ -32,7 +22,7 @@ export function Products() {
       <AdminPageHeader
         eyebrow="Catalog"
         title="Products"
-        description="Create, organize, and keep your storefront collection up to date."
+        description="Add garments to your catalog. Editing and deleting will be available in a future update."
         actions={
           <Link to="/admin/products/new" className={`${primaryButtonStyles} w-full sm:w-auto`}>
             <Plus className="h-4 w-4" aria-hidden="true" />
@@ -60,11 +50,7 @@ export function Products() {
           <>
             <div className="divide-y divide-stone-100 md:hidden">
               {products.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  onDelete={() => setDeleteId(product.id)}
-                />
+                <ProductCard key={product.id} product={product} />
               ))}
             </div>
 
@@ -77,7 +63,6 @@ export function Products() {
                     <th className="px-6 py-4">Price</th>
                     <th className="px-6 py-4">Category</th>
                     <th className="px-6 py-4">Status</th>
-                    <th className="px-6 py-4 text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-stone-100">
@@ -92,9 +77,6 @@ export function Products() {
                       <td className="px-6 py-4">
                         <AdminBadge value={product.isActive ? "ACTIVE" : "INACTIVE"} label={product.isActive ? "Active" : "Inactive"} />
                       </td>
-                      <td className="px-6 py-4">
-                        <ProductActions product={product} onDelete={() => setDeleteId(product.id)} />
-                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -106,19 +88,11 @@ export function Products() {
         )}
       </AdminPanel>
 
-      {deleteId ? (
-        <ConfirmModal
-          title="Delete product"
-          message="Are you sure you want to delete this product? This action cannot be undone."
-          onConfirm={handleDelete}
-          onCancel={() => setDeleteId(null)}
-        />
-      ) : null}
     </div>
   );
 }
 
-function ProductCard({ product, onDelete }) {
+function ProductCard({ product }) {
   return (
     <article className="p-5">
       <div className="flex items-start justify-between gap-4">
@@ -131,31 +105,8 @@ function ProductCard({ product, onDelete }) {
       </div>
       <div className="mt-5 flex items-center justify-between gap-4 border-t border-stone-100 pt-4">
         <p className="text-lg font-black text-slate-950">${product.basePrice?.toFixed(2)}</p>
-        <ProductActions product={product} onDelete={onDelete} />
       </div>
     </article>
-  );
-}
-
-function ProductActions({ product, onDelete }) {
-  return (
-    <div className="flex items-center justify-end gap-2">
-      <Link
-        to={`/admin/products/${product.id}/edit`}
-        className="grid h-10 w-10 place-items-center rounded-xl border border-stone-200 text-slate-500 transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-        aria-label={`Edit ${product.name}`}
-      >
-        <Pencil className="h-4 w-4" aria-hidden="true" />
-      </Link>
-      <button
-        type="button"
-        onClick={onDelete}
-        className="grid h-10 w-10 place-items-center rounded-xl border border-stone-200 text-slate-500 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-        aria-label={`Delete ${product.name}`}
-      >
-        <Trash2 className="h-4 w-4" aria-hidden="true" />
-      </button>
-    </div>
   );
 }
 
