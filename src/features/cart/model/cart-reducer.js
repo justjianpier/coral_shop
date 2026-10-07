@@ -15,12 +15,12 @@ export function cartReducer(cart, action) {
       const existingItem = cart.find((item) => item.id === action.item.id);
 
       if (!existingItem) {
-        return [...cart, { ...action.item, quantity: MIN_ITEMS }];
+        return [...cart, { ...action.item, quantity: action.quantity }];
       }
 
       return cart.map((item) =>
-        item.id === action.item.id && item.quantity < Math.min(MAX_CART_ITEMS, item.maxQuantity ?? MAX_CART_ITEMS)
-          ? { ...item, quantity: item.quantity + 1 }
+        item.id === action.item.id
+          ? { ...action.item, quantity: item.quantity + action.quantity }
           : item,
       );
     }

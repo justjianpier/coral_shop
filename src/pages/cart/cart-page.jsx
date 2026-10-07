@@ -3,16 +3,12 @@ import {
   ArrowRight,
   Minus,
   Plus,
-  ShieldCheck,
   ShoppingBag,
   Trash2,
-  Truck,
 } from "lucide-react";
 import { Link } from "react-router";
 import { useCart } from "../../features/cart/hooks/use-cart";
 import { MAX_CART_ITEMS } from "../../features/cart/model/cart-reducer";
-
-const FREE_SHIPPING_THRESHOLD = 50;
 
 export function CartPage() {
   const {
@@ -25,16 +21,6 @@ export function CartPage() {
   } = useCart();
 
   const itemCount = cart.reduce((total, item) => total + item.quantity, 0);
-  const remainingForFreeShipping = Math.max(
-    FREE_SHIPPING_THRESHOLD - cartTotal,
-    0,
-  );
-  const shippingProgress = Math.min(
-    (cartTotal / FREE_SHIPPING_THRESHOLD) * 100,
-    100,
-  );
-  const hasFreeShipping = remainingForFreeShipping === 0;
-
   return (
     <main className="relative min-h-[70vh] overflow-hidden bg-[#faf8f4] py-8 sm:py-12 lg:py-16">
       <div
@@ -65,8 +51,7 @@ export function CartPage() {
               Pieces you&apos;ve chosen
             </h1>
             <p className="mt-3 max-w-xl text-sm leading-6 text-slate-500 sm:text-base">
-              Review your selection, adjust quantities, and continue when
-              everything feels just right.
+              Review your selection and adjust quantities. Checkout is not available yet.
             </p>
           </div>
 
@@ -214,34 +199,9 @@ export function CartPage() {
                 </div>
 
                 <div className="px-5 py-5 sm:px-6">
-                  <div className="mb-6 rounded-2xl bg-[#fff6f1] p-4">
-                    <div className="flex items-start gap-3">
-                      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-white text-[#ff5331] shadow-sm">
-                        <Truck className="h-4 w-4" aria-hidden="true" />
-                      </span>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-sm font-bold text-slate-800">
-                          {hasFreeShipping
-                            ? "You unlocked free shipping"
-                            : `$${remainingForFreeShipping.toFixed(2)} away from free shipping`}
-                        </p>
-                        <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-[#ff5331]/15">
-                          <div
-                            className="h-full rounded-full bg-[#ff5331] transition-[width] duration-500 motion-reduce:transition-none"
-                            style={{ width: `${shippingProgress}%` }}
-                            role="progressbar"
-                            aria-label="Progress toward free shipping"
-                            aria-valuemin="0"
-                            aria-valuemax={FREE_SHIPPING_THRESHOLD}
-                            aria-valuenow={Math.min(
-                              cartTotal,
-                              FREE_SHIPPING_THRESHOLD,
-                            )}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <p className="mb-6 rounded-2xl bg-[#fff6f1] p-4 text-sm leading-6 text-slate-700">
+                    This bag is a selection, not an order. Prices and availability will need to be confirmed when checkout is available.
+                  </p>
 
                   <dl className="space-y-3 text-sm">
                     <div className="flex items-center justify-between gap-4 text-slate-500">
@@ -250,48 +210,11 @@ export function CartPage() {
                         ${cartTotal.toFixed(2)}
                       </dd>
                     </div>
-                    <div className="flex items-center justify-between gap-4 text-slate-500">
-                      <dt>Shipping</dt>
-                      <dd
-                        className={
-                          hasFreeShipping
-                            ? "font-bold text-emerald-600"
-                            : "text-xs font-medium text-slate-500"
-                        }
-                      >
-                        {hasFreeShipping ? "Free" : "Calculated at checkout"}
-                      </dd>
-                    </div>
-                    <div className="flex items-end justify-between gap-4 border-t border-stone-200 pt-4">
-                      <dt>
-                        <span className="block text-base font-extrabold text-slate-950">
-                          Estimated total
-                        </span>
-                        <span className="mt-0.5 block text-xs text-slate-400">
-                          Taxes calculated at checkout
-                        </span>
-                      </dt>
-                      <dd className="text-2xl font-black tracking-tight tabular-nums text-slate-950">
-                        ${cartTotal.toFixed(2)}
-                      </dd>
-                    </div>
                   </dl>
 
-                  <button
-                    type="button"
-                    className="mt-6 flex min-h-13 w-full items-center justify-center gap-2 rounded-xl bg-[#ff5331] px-5 py-3.5 text-sm font-bold text-white shadow-lg shadow-[#ff5331]/20 transition hover:-translate-y-0.5 hover:bg-[#e94727] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff5331] motion-reduce:transform-none"
-                  >
-                    Proceed to checkout
-                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                  </button>
-
-                  <div className="mt-4 flex items-center justify-center gap-2 text-xs font-medium text-slate-400">
-                    <ShieldCheck
-                      className="h-4 w-4 text-emerald-600"
-                      aria-hidden="true"
-                    />
-                    Secure and protected checkout
-                  </div>
+                  <Link to="/products" className="mt-6 flex min-h-13 w-full items-center justify-center gap-2 rounded-xl bg-[#ff5331] px-5 py-3.5 text-sm font-bold text-white transition hover:bg-[#e94727] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff5331]">
+                    Continue shopping <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  </Link>
                 </div>
               </div>
             </aside>
